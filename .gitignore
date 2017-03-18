@@ -1,3 +1,8 @@
+# custom
+sync.sh
+sync.log
+update.sh
+
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
