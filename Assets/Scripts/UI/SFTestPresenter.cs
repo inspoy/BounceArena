@@ -1,6 +1,14 @@
-﻿using System.Collections;
+﻿/**
+ * Created on 2017/03/20 by Inspoy
+ * All rights reserved.
+ */
+
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using SF;
 
 namespace SF
 {
@@ -10,10 +18,11 @@ namespace SF
         public void initWithView(SFTestView view)
         {
             m_view = view;
-            m_view.addEventListener(m_view.btnOk, SFEvent.EVENT_UI_CLICK, onButtonClicked);
+
+            m_view.addEventListener(m_view.btnOk, SFEvent.EVENT_UI_CLICK, onOk);
         }
 
-        void onButtonClicked(SFEvent e)
+        void onOk(SFEvent e)
         {
             m_view.lblTitle.text = "Button Clicked!";
         }

@@ -1,4 +1,10 @@
-﻿using System.Collections;
+/**
+ * Created on 2017/03/20 by Inspoy
+ * All rights reserved.
+ */
+
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,12 +17,13 @@ public class SFTestView : SFBaseView
 
     private Text m_lblTitle;
     private Button m_btnOk;
+
     private SFTestPresenter m_presenter;
 
     void Start()
-    {
+{
 #if UNITY_EDITOR
-        var time1 = System.DateTime.Now;
+        var time1 = DateTime.Now;
 #endif
         GameObject lblTitleGO = SFUtils.findChildWithParent(gameObject, "lblTitle");
         if (lblTitleGO != null)
@@ -33,11 +40,11 @@ public class SFTestView : SFBaseView
         m_presenter = new SFTestPresenter();
         m_presenter.initWithView(this);
 
-        SFUtils.log("View created: vwLogin");
+        SFUtils.log("View created: vwTest");
 #if UNITY_EDITOR
-        var time2 = System.DateTime.Now;
+        var time2 = DateTime.Now;
         var diff = time2.Subtract(time1);
-        SFUtils.log(string.Format("Time Cost: {0}ms", diff.TotalMilliseconds));
+        SFUtils.log(string.Format("Time cost: {0}ms", diff.TotalMilliseconds));
 #endif
     }
 }

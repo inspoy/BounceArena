@@ -40,26 +40,26 @@ namespace SF
         public static void generateUICode(GameObject prefab, bool exportPresenter)
         {
             string viewName = prefab.name.Substring(2);
-            Debug.Log(string.Format("Generating {0}{1}...", viewName, exportPresenter ? " with presenter" : ""));
+            Debug.Log(string.Format("Generating SF{0}View{1}...", viewName, exportPresenter ? " with presenter" : ""));
 
             string viewContent = "";
             string presenterContent = "";
             getViewContent(prefab, out viewContent, out presenterContent);
 
-            string viewFilepath = string.Format("Assets/Scripts/UI/SF%sView.cs", viewName);
+            string viewFilepath = string.Format("Assets/Scripts/UI/SF{0}View.cs", viewName);
             var viewFile = new FileInfo(viewFilepath);
             var sw = viewFile.CreateText();
-            sw.WriteLine(viewContent);
+            sw.Write(viewContent);
             sw.Close();
             // 添加文件头部的注释
             SFScriptHeaderGenerator.OnWillCreateAsset(viewFilepath);
 
             if (exportPresenter)
             {
-                string presenterFilepath = string.Format("Assets/Scripts/UI/SF%sPresenter.cs", viewName);
+                string presenterFilepath = string.Format("Assets/Scripts/UI/SF{0}Presenter.cs", viewName);
                 var presenterFile = new FileInfo(presenterFilepath);
                 var sw2 = presenterFile.CreateText();
-                sw2.WriteLine(presenterFile);
+                sw2.Write(presenterContent);
                 sw2.Close();
                 // 添加文件头部的注释
                 SFScriptHeaderGenerator.OnWillCreateAsset(presenterFilepath);
@@ -99,7 +99,7 @@ namespace SF
                 "            m_view = view;\n\n";
             string presenterPart1 = "";
             string presenterPart2 = "";
-            foreach (RectTransform trans in prefab.GetComponentInChildren<RectTransform>())
+            foreach (RectTransform trans in prefab.GetComponentsInChildren<RectTransform>())
             {
                 var GO = trans.gameObject;
                 string prefix = GO.name.Substring(0, 3);
@@ -126,10 +126,11 @@ namespace SF
                         "        {\n" +
                         "            m_" + GO.name + " = " + GO.name + "GO.GetComponent<Button>();\n" +
                         "        }\n\n";
-                    presenterPart1 += "            m_view.addEventListener(m_view." + GO.name + ", SFEvent.EVENT_UI_CLICK, on" + GO.name.Substring(2) + ");\n";
+                    presenterPart1 += "            m_view.addEventListener(m_view." + GO.name + ", SFEvent.EVENT_UI_CLICK, on" + GO.name.Substring(3) + ");\n";
                     presenterPart2 += "\n" +
-                        "        void on" + GO.name.Substring(2) + "(SFEvent e)\n" +
-                        "        {\n}\n";
+                        "        void on" + GO.name.Substring(3) + "(SFEvent e)\n" +
+                        "        {\n" +
+                        "        }\n";
                 }
                 else if (prefix == "tgb")
                 {
@@ -146,13 +147,13 @@ namespace SF
                 "        var time1 = DateTime.Now;\n" +
                 "#endif\n";
             viewCode += viewPart3 +
-                "        m_presenter = new SF" + viewName + "Presenter()\n" +
+                "        m_presenter = new SF" + viewName + "Presenter();\n" +
                 "        m_presenter.initWithView(this);\n\n" +
                 "        SFUtils.log(\"View created: vw" + viewName + "\");\n" +
                 "#if UNITY_EDITOR\n" +
                 "        var time2 = DateTime.Now;\n" +
-                "        var diff = time2.Substract(time1);\n" +
-                "        SFUtils.log(string.Format(\"Time cost: {0}ms\", diff.TotalMilliseconds));" +
+                "        var diff = time2.Subtract(time1);\n" +
+                "        SFUtils.log(string.Format(\"Time cost: {0}ms\", diff.TotalMilliseconds));\n" +
                 "#endif\n" +
                 "    }\n}\n";
             presenterCode += presenterPart1 + "        }\n" + presenterPart2 + "    }\n}\n";
