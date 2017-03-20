@@ -8,7 +8,7 @@ public class SFSceneManager : MonoBehaviour
     static public GameObject uiRoot = null;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         var uiRootGO = GameObject.Find("UIRoot");
         if (uiRootGO == null)
