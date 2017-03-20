@@ -3,7 +3,9 @@
  * All rights reserved.
  */
 
+using System;
 using System.IO;
+using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -67,13 +69,30 @@ namespace SF
 
             // ¸øPrefab¹ÒÔØView½Å±¾
             string componentName = "SF" + viewName + "View";
-            AssetDatabase.Refresh();
-            var component = prefab.GetComponent(System.Type.GetType(componentName));
+            AssetDatabase.ImportAsset(viewFilepath);
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+            var component = prefab.GetComponent(componentName);
             if (component != null)
-            {
-                GameObject.DestroyImmediate(component);
+            { 
+                GameObject.DestroyImmediate(component, true);
             }
-            prefab.AddComponent(System.Type.GetType(componentName));
+            prefab.AddComponent(getTypeByName(componentName));
+            Debug.Log("Generated!");
+        }
+
+        private static Type getTypeByName(string className)
+        {
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (Type type in assembly.GetTypes())
+                {
+                    if (type.Name == className)
+                    {
+                        return type;
+                    }
+                }
+            }
+            return null;
         }
 
         private static void getViewContent(GameObject prefab, out string viewCode, out string presenterCode)
