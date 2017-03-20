@@ -18,6 +18,11 @@ public class SFSceneManager : MonoBehaviour
         uiRoot = uiRootGO;
     }
 
+    void OnDestroy()
+    {
+        uiRoot = null;
+    }
+
     // Update is called once per frame
     void Update()
     {

@@ -202,7 +202,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 272378719}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 500}
+  m_LocalPosition: {x: 0, y: 0, z: 100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1875055005}
@@ -428,7 +428,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 71.3
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
@@ -634,27 +634,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &1875055004 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1376494169155988, guid: 5e206f7e3d0f71247a804aac5991f31b,
-    type: 2}
-  m_PrefabInternal: {fileID: 1976076658}
 --- !u!224 &1875055005 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224325963662324016, guid: 5e206f7e3d0f71247a804aac5991f31b,
     type: 2}
   m_PrefabInternal: {fileID: 1976076658}
---- !u!114 &1875055008
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1875055004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f760c28da27895f44b10f7efa8ea241c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1976076658
 Prefab:
   m_ObjectHideFlags: 0
