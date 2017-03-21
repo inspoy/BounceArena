@@ -72,11 +72,10 @@ namespace SF
             AssetDatabase.ImportAsset(viewFilepath);
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
             var component = prefab.GetComponent(componentName);
-            if (component != null)
+            if (component == null)
             { 
-                GameObject.DestroyImmediate(component, true);
+                prefab.AddComponent(getTypeByName(componentName));
             }
-            prefab.AddComponent(getTypeByName(componentName));
             Debug.Log("Generated!");
         }
 
