@@ -1,5 +1,5 @@
 /**
- * Created on 2017/03/20 by Inspoy
+ * Created on 2017/03/23 by inspoy
  * All rights reserved.
  */
 
@@ -40,11 +40,12 @@ public class SFTestView : SFBaseView
         m_presenter = new SFTestPresenter();
         m_presenter.initWithView(this);
 
-        SFUtils.log("View created: vwTest");
 #if UNITY_EDITOR
         var time2 = DateTime.Now;
         var diff = time2.Subtract(time1);
-        SFUtils.log(string.Format("Time cost: {0}ms", diff.TotalMilliseconds));
+        SFUtils.log(string.Format("View created: vwTest, cost {0}ms", diff.TotalMilliseconds));
+#else
+        SFUtils.log("View created: vwTest");
 #endif
     }
 }

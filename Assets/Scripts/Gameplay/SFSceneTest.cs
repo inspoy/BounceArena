@@ -13,7 +13,8 @@ public class SFSceneTest : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        GameObject.Instantiate(Resources.Load("Prefabs/Views/vwTest"), SFSceneManager.uiRoot.transform);
+//        GameObject.Instantiate(Resources.Load("Prefabs/Views/vwTest"), SFSceneManager.uiRoot.transform);
+        SFSceneManager.addView("vwTest");
     }
 
     // Update is called once per frame

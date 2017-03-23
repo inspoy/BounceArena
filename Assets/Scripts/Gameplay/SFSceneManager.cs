@@ -8,6 +8,13 @@ public class SFSceneManager : MonoBehaviour
 {
     static public GameObject uiRoot = null;
 
+    /// <summary>
+    /// 根据给定的prefab将UI添加到场景中，可指定父节点（默认uiRoot），层级
+    /// </summary>
+    /// <returns>The view.</returns>
+    /// <param name="prefab">预设体对象</param>
+    /// <param name="trans">父节点，默认uiRoot</param>
+    /// <param name="sibIdx">层级，默认最上层</param>
     static public GameObject addView(GameObject prefab, Transform trans = null, int sibIdx = -1)
     {
         if (prefab == null)
@@ -21,13 +28,22 @@ public class SFSceneManager : MonoBehaviour
             parent = SFSceneManager.uiRoot.transform;
         }
         var GO = GameObject.Instantiate(prefab, parent) as GameObject;
-        if (sibIdx <= 0)
+        GO.transform.localScale = Vector3.one;
+        GO.transform.localPosition = Vector3.zero;
+        if (sibIdx > 0)
         {
             GO.transform.SetSiblingIndex(sibIdx);
         }
         return GO;
     }
 
+    /// <summary>
+    /// 根据给定的View Name将UI添加到场景中，可指定父节点（默认uiRoot），层级
+    /// </summary>
+    /// <returns>The view.</returns>
+    /// <param name="viewName">View名称</param>
+    /// <param name="trans">父节点，默认uiRoot</param>
+    /// <param name="sibIdx">层级，默认最上层</param>
     static public GameObject addView(string viewName, Transform trans = null, int sibIdx = -1)
     {
         var prefab = Resources.Load("Prefabs/Views/" + viewName) as GameObject;

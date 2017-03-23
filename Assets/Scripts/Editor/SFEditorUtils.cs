@@ -167,11 +167,12 @@ namespace SF
             viewCode += viewPart3 +
                 "        m_presenter = new SF" + viewName + "Presenter();\n" +
                 "        m_presenter.initWithView(this);\n\n" +
-                "        SFUtils.log(\"View created: vw" + viewName + "\");\n" +
                 "#if UNITY_EDITOR\n" +
                 "        var time2 = DateTime.Now;\n" +
                 "        var diff = time2.Subtract(time1);\n" +
-                "        SFUtils.log(string.Format(\"Time cost: {0}ms\", diff.TotalMilliseconds));\n" +
+                "        SFUtils.log(string.Format(\"View created: vw" + viewName + ", cost {0}ms\", diff.TotalMilliseconds));\n" +
+                "#else\n" +
+                "        SFUtils.log(\"View created: vw" + viewName + "\");\n" +
                 "#endif\n" +
                 "    }\n}\n";
             presenterCode += presenterPart1 + "        }\n" + presenterPart2 + "    }\n}\n";
