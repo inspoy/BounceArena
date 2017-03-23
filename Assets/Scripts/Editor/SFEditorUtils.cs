@@ -16,10 +16,10 @@ namespace SF
     public class SFEditorUtils
     {
         /// <summary>
-        /// ¼ì²é¸ø¶¨µÄprefabÊÇ·ñÊÇÒ»¸öºÏ·¨µÄUI View
+        /// æ£€æŸ¥ç»™å®šçš„prefabæ˜¯å¦æ˜¯ä¸€ä¸ªåˆæ³•çš„UI View
         /// </summary>
-        /// <param name="prefab">¸ø¶¨µÄGameObject</param>
-        /// <returns>ÊÇ·ñºÏ·¨</returns>
+        /// <param name="prefab">ç»™å®šçš„GameObject</param>
+        /// <returns>æ˜¯å¦åˆæ³•</returns>
         public static bool checkUIValidation(GameObject prefab)
         {
             bool check = false;
@@ -35,9 +35,9 @@ namespace SF
         }
 
         /// <summary>
-        /// Éú³ÉUI´úÂë£¬²¢×Ô¶¯¸øPrefab¹ÒÔØView½Å±¾
+        /// ç”ŸæˆUIä»£ç ï¼Œå¹¶è‡ªåŠ¨ç»™PrefabæŒ‚è½½Viewè„šæœ¬
         /// </summary>
-        /// <param name="prefab">Ö¸¶¨µÄUI View</param>
+        /// <param name="prefab">æŒ‡å®šçš„UI View</param>
         /// <param name="exportPresenter"></param>
         public static void generateUICode(GameObject prefab, bool exportPresenter)
         {
@@ -53,21 +53,29 @@ namespace SF
             var sw = viewFile.CreateText();
             sw.Write(viewContent);
             sw.Close();
-            // Ìí¼ÓÎÄ¼şÍ·²¿µÄ×¢ÊÍ
+            // æ·»åŠ æ–‡ä»¶å¤´éƒ¨çš„æ³¨é‡Š
             SFScriptHeaderGenerator.OnWillCreateAsset(viewFilepath);
 
             if (exportPresenter)
             {
                 string presenterFilepath = string.Format("Assets/Scripts/UI/SF{0}Presenter.cs", viewName);
                 var presenterFile = new FileInfo(presenterFilepath);
-                var sw2 = presenterFile.CreateText();
-                sw2.Write(presenterContent);
-                sw2.Close();
-                // Ìí¼ÓÎÄ¼şÍ·²¿µÄ×¢ÊÍ
-                SFScriptHeaderGenerator.OnWillCreateAsset(presenterFilepath);
+                if (presenterFile.Exists)
+                {
+                    // å¦‚æœpresenteræ–‡ä»¶å·²ç»å­˜åœ¨ï¼Œä¸è¦†ç›–ï¼Œè·³è¿‡
+                    Debug.Log("presenteræ–‡ä»¶å·²ç»å­˜åœ¨ï¼Œæœ¬æ¬¡æ²¡æœ‰ç”Ÿæˆpresenterä»£ç ï¼Œéœ€è¦çš„è¯éœ€å…ˆæ‰‹åŠ¨åˆ é™¤XXPresenter.cs");
+                }
+                else
+                {
+                    var sw2 = presenterFile.CreateText();
+                    sw2.Write(presenterContent);
+                    sw2.Close();
+                    // æ·»åŠ æ–‡ä»¶å¤´éƒ¨çš„æ³¨é‡Š
+                    SFScriptHeaderGenerator.OnWillCreateAsset(presenterFilepath);
+                }
             }
 
-            // ¸øPrefab¹ÒÔØView½Å±¾
+            // ç»™PrefabæŒ‚è½½Viewè„šæœ¬
             string componentName = "SF" + viewName + "View";
             AssetDatabase.ImportAsset(viewFilepath);
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
