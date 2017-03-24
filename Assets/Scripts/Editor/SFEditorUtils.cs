@@ -63,7 +63,7 @@ namespace SF
                 if (presenterFile.Exists)
                 {
                     // 如果presenter文件已经存在，不覆盖，跳过
-                    Debug.Log("presenter文件已经存在，本次没有生成presenter代码，需要的话需先手动删除XXPresenter.cs");
+                    Debug.LogWarning("presenter文件已经存在，本次没有生成presenter代码，需要的话需先手动删除XXPresenter.cs");
                 }
                 else
                 {
@@ -117,12 +117,12 @@ namespace SF
             string viewPart1 = "";
             string viewPart2 = "";
             string viewPart3 = "";
-            presenterCode += "namespace SF\n{\n    public class SF" + viewName + "Presenter\n" +
+            presenterCode += "namespace SF\n{\n    public class SF" + viewName + "Presenter : ISFBasePresenter\n" +
                 "    {\n" +
                 "        SF" + viewName + "View m_view;\n" +
-                "        public void initWithView(SF" + viewName + "View view)\n" +
+                "        public void initWithView(SFBaseView view)\n" +
                 "        {\n" +
-                "            m_view = view;\n\n";
+                "            m_view = view as SF" + viewName + "View;\n\n";
             string presenterPart1 = "";
             string presenterPart2 = "";
             foreach (RectTransform trans in prefab.GetComponentsInChildren<RectTransform>())
@@ -167,13 +167,13 @@ namespace SF
                     // Image
                 }
             }
-            viewCode += viewPart1 + "\n" + viewPart2 + "\n" + "    private SF" + viewName + "Presenter m_presenter;\n\n" +
+            viewCode += viewPart1 + "\n" + viewPart2 + "\n\n" +
                 "    void Start()\n{\n" +
                 "#if UNITY_EDITOR\n" +
                 "        var time1 = DateTime.Now;\n" +
                 "#endif\n";
             viewCode += viewPart3 +
-                "        m_presenter = new SF" + viewName + "Presenter();\n" +
+                "        m_presenter = new SF" + viewName + "Presenter() as ISFBasePresenter;\n" +
                 "        m_presenter.initWithView(this);\n\n" +
                 "#if UNITY_EDITOR\n" +
                 "        var time2 = DateTime.Now;\n" +
@@ -183,7 +183,11 @@ namespace SF
                 "        SFUtils.log(\"View created: vw" + viewName + "\");\n" +
                 "#endif\n" +
                 "    }\n}\n";
-            presenterCode += presenterPart1 + "        }\n" + presenterPart2 + "    }\n}\n";
+            presenterCode += presenterPart1 + "        }\n\n" +
+                "        public void onViewRemoved()\n" +
+                "        {\n" +
+                "        }\n\n" +
+                presenterPart2 + "    }\n}\n";
         }
     }
 }

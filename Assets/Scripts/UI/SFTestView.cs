@@ -1,5 +1,5 @@
 /**
- * Created on 2017/03/23 by inspoy
+ * Created on 2017/03/24 by inspoy
  * All rights reserved.
  */
 
@@ -14,11 +14,12 @@ public class SFTestView : SFBaseView
 {
     public Text lblTitle { get { return m_lblTitle; } }
     public Button btnOk { get { return m_btnOk; } }
+    public Button btnClose { get { return m_btnClose; } }
 
     private Text m_lblTitle;
     private Button m_btnOk;
+    private Button m_btnClose;
 
-    private SFTestPresenter m_presenter;
 
     void Start()
 {
@@ -37,7 +38,13 @@ public class SFTestView : SFBaseView
             m_btnOk = btnOkGO.GetComponent<Button>();
         }
 
-        m_presenter = new SFTestPresenter();
+        GameObject btnCloseGO = SFUtils.findChildWithParent(gameObject, "btnClose");
+        if (btnCloseGO != null)
+        {
+            m_btnClose = btnCloseGO.GetComponent<Button>();
+        }
+
+        m_presenter = new SFTestPresenter() as ISFBasePresenter;
         m_presenter.initWithView(this);
 
 #if UNITY_EDITOR
