@@ -25,6 +25,7 @@ namespace SF
         void onOk(SFEvent e)
         {
             m_view.lblTitle.text = "Button Clicked!";
+            m_view.btnOk.SetText("修改了button的Text");
         }
     }
 }
