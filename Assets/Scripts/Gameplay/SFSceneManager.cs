@@ -27,9 +27,7 @@ public class SFSceneManager : MonoBehaviour
         {
             parent = SFSceneManager.uiRoot.transform;
         }
-        var GO = GameObject.Instantiate(prefab, parent) as GameObject;
-        GO.transform.localScale = Vector3.one;
-        GO.transform.localPosition = Vector3.zero;
+        var GO = GameObject.Instantiate(prefab, parent, false) as GameObject;
         if (sibIdx > 0)
         {
             GO.transform.SetSiblingIndex(sibIdx);

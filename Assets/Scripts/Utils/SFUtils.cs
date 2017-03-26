@@ -34,9 +34,13 @@ namespace SF
         /// </summary>
         /// <param name="msg">日志信息</param>
         /// <param name="level">日志等级，默认为LOG_LEVEL_INFO(0)</param>
-        static public void log(string msg, int level = LOG_LEVEL_INFO)
+        static public void log(string msg, int level = LOG_LEVEL_INFO, params object[] paras)
         {
             string logStr = msg;
+            if (paras.Length > 0)
+            {
+                logStr = string.Format(msg, paras);
+            }
             if (level == LOG_LEVEL_WARNING)
             {
                 Debug.LogWarning(msg);
