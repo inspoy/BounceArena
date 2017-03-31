@@ -20,6 +20,7 @@ namespace SF
     public class SFTestPresenter : ISFBasePresenter
     {
         SFTestView m_view;
+
         public void initWithView(SFBaseView view)
         {
             m_view = view as SFTestView;
@@ -32,7 +33,6 @@ namespace SF
         {
             SFUtils.log("SFTestView被关闭了");
         }
-
 
         void onOk(SFEvent e)
         {

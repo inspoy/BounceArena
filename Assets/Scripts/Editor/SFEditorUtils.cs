@@ -117,7 +117,8 @@ namespace SF
             string viewPart1 = "";
             string viewPart2 = "";
             string viewPart3 = "";
-            presenterCode += "namespace SF\n{\n    public class SF" + viewName + "Presenter : ISFBasePresenter\n" +
+            presenterCode +=
+                "namespace SF\n{\n    public class SF" + viewName + "Presenter : ISFBasePresenter\n" +
                 "    {\n" +
                 "        SF" + viewName + "View m_view;\n" +
                 "        public void initWithView(SFBaseView view)\n" +
@@ -166,6 +167,18 @@ namespace SF
                 {
                     // Image
                 }
+                else if (prefix == "txt")
+                {
+                    // Input Field
+                    viewPart1 += "    public InputField " + GO.name + " { get { return m_" + GO.name + "; } }\n";
+                    viewPart2 += "    private InputField m_" + GO.name + ";\n";
+                    viewPart3 +=
+                        "        GameObject " + GO.name + "GO = SFUtils.findChildWithParent(gameObject, \"" + GO.name + "\");\n" +
+                        "        if (" + GO.name + "GO != null)\n" +
+                        "        {\n" +
+                        "            m_" + GO.name + " = " + GO.name + "GO.GetComponent<InputField>();\n" +
+                        "        }\n\n";
+                }
             }
             viewCode += viewPart1 + "\n" + viewPart2 + "\n\n" +
                 "    void Start()\n{\n" +
@@ -173,7 +186,7 @@ namespace SF
                 "        var time1 = DateTime.Now;\n" +
                 "#endif\n";
             viewCode += viewPart3 +
-                "        m_presenter = new SF" + viewName + "Presenter() as ISFBasePresenter;\n" +
+                "        m_presenter = new SF" + viewName + "Presenter() as ISFBasePresenter;\n\n" +
                 "        m_presenter.initWithView(this);\n\n" +
                 "#if UNITY_EDITOR\n" +
                 "        var time2 = DateTime.Now;\n" +
@@ -186,7 +199,7 @@ namespace SF
             presenterCode += presenterPart1 + "        }\n\n" +
                 "        public void onViewRemoved()\n" +
                 "        {\n" +
-                "        }\n\n" +
+                "        }\n" +
                 presenterPart2 + "    }\n}\n";
         }
     }

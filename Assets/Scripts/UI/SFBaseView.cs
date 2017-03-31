@@ -5,8 +5,12 @@ using SF;
 
 public class SFBaseView : MonoBehaviour
 {
+    public delegate void SFViewUdpate(float dt);
+
     protected ISFBasePresenter m_presenter;
     bool m_isViewRemoved = false;
+    SFViewUdpate m_updator = null;
+    SFViewUdpate m_fixedUpdator = null;
 
     public bool isViewRemoved{ get { return m_isViewRemoved; } }
 
@@ -37,6 +41,34 @@ public class SFBaseView : MonoBehaviour
         else
         {
             GameObject.Destroy(gameObject);
+        }
+    }
+
+    public void setUpdator(SFViewUdpate updator, bool isFixed = false)
+    {
+        if (isFixed)
+        {
+            m_fixedUpdator = updator;
+        }
+        else
+        {
+            m_updator = updator;
+        }
+    }
+
+    void Update()
+    {
+        if (m_updator != null)
+        {
+            m_updator(Time.deltaTime);
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (m_fixedUpdator != null)
+        {
+            m_fixedUpdator(Time.fixedDeltaTime);
         }
     }
 

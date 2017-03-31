@@ -58,7 +58,6 @@ namespace SF
         /// <param name="ip">目标主机的IP地址</param>
         /// <param name="port">端口</param>
         /// <param name="callback">处理数据的回调函数</param>
-        /// <returns></returns>
         public void init(string ip, int port, SFClientCallback callback, SFSocketStateCallback stateCallback)
         {
             m_ipend = new IPEndPoint(IPAddress.Parse(ip), port);
@@ -94,6 +93,9 @@ namespace SF
                 m_socket.Disconnect(false);
             }
             m_isReady = false;
+            SFUtils.log("共发送{0} Bytes", 0, totalSendLength);
+            SFUtils.log("共接收{0} Bytes", 0, totalRecvLength);
+            SFUtils.log("连接已关闭");
         }
 
         /// <summary>
