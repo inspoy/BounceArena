@@ -112,6 +112,10 @@ namespace SF
             {
                 // 编码
                 byte[] data = Encoding.UTF8.GetBytes(msg);
+                if (!m_socket.Connected)
+                {
+                    throw new Exception("Socket is not connected");
+                }
                 m_socket.BeginSend(data, 0, data.Length, SocketFlags.None, result =>
                 {
                     // 发送完成
@@ -129,20 +133,32 @@ namespace SF
         {
             try
             {
+                if (!m_socket.Connected)
+                {
+                    throw new Exception("Socket is not connected");
+                }
                 byte[] data = new byte[1024];
                 m_socket.BeginReceive(data, 0, data.Length, SocketFlags.None, result =>
                 {
                     int length = m_socket.EndReceive(result);
                     m_totalRecv += length;
                     // 解码并执行回调
-                    m_callback(Encoding.UTF8.GetString(data));
-                    socketRecv();
+                    if (length > 0)
+                    {
+                        m_callback(Encoding.UTF8.GetString(data));
+                        socketRecv();
+                    }
+                    else
+                    {
+                        throw new Exception("Connection is interrupted");
+                    }
                 }, null);
             }
             catch (Exception e)
             {
                 SFUtils.logWarning("网络连接中断：" + e.Message);
                 m_isReady = false;
+                m_callback("网络连接中断：" + e.Message);
             }
         }
     }

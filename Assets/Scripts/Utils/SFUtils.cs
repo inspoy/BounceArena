@@ -43,17 +43,17 @@ namespace SF
             }
             if (level == LOG_LEVEL_WARNING)
             {
-                Debug.LogWarning(msg);
+                Debug.LogWarning(logStr);
                 logStr = "[WARNING] - " + logStr;
             }
             else if (level == LOG_LEVEL_ERROR)
             {
-                Debug.LogError(msg);
+                Debug.LogError(logStr);
                 logStr = "  [ERROR] - " + logStr;
             }
             else
             {
-                Debug.Log(msg);
+                Debug.Log(logStr);
                 logStr = " [INFO-" + level.ToString() + "] - " + logStr;
             }
             SFUtils.logToFile(logStr);

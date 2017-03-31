@@ -44,7 +44,7 @@ namespace SF
             if (m_client.isReady)
             {
                 string content = m_view.txtMsg.text;
-                SFUtils.log("正在发送" + content);
+                SFUtils.log("正在发送 " + content);
                 m_client.sendData(content);
             }
             else
@@ -82,6 +82,7 @@ namespace SF
                 return;
             }
             m_client.close();
+            m_infoMsg = "连接已断开";
         }
 
         void onRecvMsg(string msg)

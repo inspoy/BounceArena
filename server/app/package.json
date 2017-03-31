@@ -1,0 +1,19 @@
+{
+  "name": "bouncearena_server",
+  "version": "0.0.1",
+  "description": "Game server of the game BounceArena",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inspoy/BounceArena.git"
+  },
+  "author": "inspoy",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/inspoy/BounceArena/issues"
+  },
+  "homepage": "https://github.com/inspoy/BounceArena#readme"
+}
