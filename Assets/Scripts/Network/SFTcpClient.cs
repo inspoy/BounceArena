@@ -33,23 +33,27 @@ namespace SF
         /// <summary>
         /// 统计一共发送了多少字节的数据
         /// </summary>
-        public int totalSendLength { get { return m_totalSend; } }
+        public long totalSendLength { get { return m_totalSend; } }
 
         /// <summary>
         /// 统计一共接收了多少字节的数据
         /// </summary>
-        public int totalRecvLength { get { return m_totalRecv; } }
+        public long totalRecvLength { get { return m_totalRecv; } }
+
+        public SFEventDispatcher dispatcher;
 
         SFClientCallback m_callback;
         SFSocketStateCallback m_stateCallback;
         IPEndPoint m_ipend;
         Socket m_socket;
         bool m_isReady;
-        int m_totalSend;
-        int m_totalRecv;
+        long m_totalSend;
+        long m_totalRecv;
+        long m_startTime;
 
         public SFTcpClient()
         {
+            dispatcher = new SFEventDispatcher(this);
         }
 
         /// <summary>
@@ -81,6 +85,16 @@ namespace SF
             m_isReady = false;
             m_totalSend = 0;
             m_totalRecv = 0;
+            m_startTime = SFUtils.getTimeStampNow();
+        }
+
+        public void uninit()
+        {
+            if (m_socket != null)
+            {
+                m_socket.Close();
+            }
+            m_isReady = false;
         }
 
         /// <summary>
@@ -93,8 +107,9 @@ namespace SF
                 m_socket.Disconnect(false);
             }
             m_isReady = false;
-            SFUtils.log("共发送{0} Bytes", 0, totalSendLength);
-            SFUtils.log("共接收{0} Bytes", 0, totalRecvLength);
+            long endTime = SFUtils.getTimeStampNow();
+            SFUtils.log("共发送{0:F2} KB, 共接收{0:F2} KB", 0, totalSendLength / 1024.0, totalRecvLength / 1024.0);
+            SFUtils.log("平均流量：{0:F2} kB/sec", 0, (totalSendLength + totalRecvLength) / (endTime - m_startTime));
             SFUtils.log("连接已关闭");
         }
 
@@ -112,10 +127,6 @@ namespace SF
             {
                 // 编码
                 byte[] data = Encoding.UTF8.GetBytes(msg);
-                if (!m_socket.Connected)
-                {
-                    throw new Exception("Socket is not connected");
-                }
                 m_socket.BeginSend(data, 0, data.Length, SocketFlags.None, result =>
                 {
                     // 发送完成
@@ -133,7 +144,7 @@ namespace SF
         {
             try
             {
-                if (!m_socket.Connected)
+                if (!m_socket.Connected || !m_isReady)
                 {
                     throw new Exception("Socket is not connected");
                 }
@@ -145,12 +156,14 @@ namespace SF
                     // 解码并执行回调
                     if (length > 0)
                     {
-                        m_callback(Encoding.UTF8.GetString(data));
+                        onRecvMsg(Encoding.UTF8.GetString(data));
                         socketRecv();
                     }
                     else
                     {
-                        throw new Exception("Connection is interrupted");
+                        m_socket.Close();
+                        m_isReady = false;
+                        dispatcher.dispatchEvent(SFEvent.EVENT_NETWORK_INTERRUPTED);
                     }
                 }, null);
             }
@@ -158,8 +171,13 @@ namespace SF
             {
                 SFUtils.logWarning("网络连接中断：" + e.Message);
                 m_isReady = false;
-                m_callback("网络连接中断：" + e.Message);
+                dispatcher.dispatchEvent(SFEvent.EVENT_NETWORK_INTERRUPTED);
             }
+        }
+
+        void onRecvMsg(string data)
+        {
+            m_callback(data);
         }
     }
 }

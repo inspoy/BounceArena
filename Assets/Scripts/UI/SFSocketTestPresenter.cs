@@ -27,6 +27,7 @@ namespace SF
             m_view.addEventListener(m_view.btnDisconnect, SFEvent.EVENT_UI_CLICK, onDisconnect);
 
             m_client = new SFTcpClient();
+            m_client.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_INTERRUPTED, onInterrupt);
             m_view.setUpdator(update);
             m_infoMsg = "";
         }
@@ -83,6 +84,11 @@ namespace SF
             }
             m_client.close();
             m_infoMsg = "连接已断开";
+        }
+
+        void onInterrupt(SFEvent e)
+        {
+            m_infoMsg = "网络连接中断";
         }
 
         void onRecvMsg(string msg)

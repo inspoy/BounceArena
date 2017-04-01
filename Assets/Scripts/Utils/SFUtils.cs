@@ -34,6 +34,7 @@ namespace SF
         /// </summary>
         /// <param name="msg">日志信息</param>
         /// <param name="level">日志等级，默认为LOG_LEVEL_INFO(0)</param>
+        /// <param name="paras">参数列表</param>
         static public void log(string msg, int level = LOG_LEVEL_INFO, params object[] paras)
         {
             string logStr = msg;
@@ -91,18 +92,20 @@ namespace SF
         /// 输出警告信息日志
         /// </summary>
         /// <param name="msg">日志信息</param>
-        static public void logWarning(string msg)
+        /// <param name="paras">参数列表</param>
+        static public void logWarning(string msg, params object[] paras)
         {
-            log(msg, LOG_LEVEL_WARNING);
+            log(msg, LOG_LEVEL_WARNING, paras);
         }
 
         /// <summary>
         /// 输出错误信息日志
         /// </summary>
         /// <param name="msg">日志信息</param>
-        static public void logError(string msg)
+        /// <param name="paras">参数列表</param>
+        static public void logError(string msg, params object[] paras)
         {
-            log(msg, LOG_LEVEL_ERROR);
+            log(msg, LOG_LEVEL_ERROR, paras);
         }
 
         /// <summary>

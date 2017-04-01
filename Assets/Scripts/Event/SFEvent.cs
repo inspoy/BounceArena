@@ -46,6 +46,7 @@ namespace SF
         public const string EVENT_HERO_OPERATION = "EVENT_HERO_OPERATION";                  // 主角操作
         public const string EVENT_HERO_SKILL = "EVENT_HERO_SKILL";                          // 主角释放技能
         public const string EVENT_UNIT_SYNC = "EVENT_UNIT_SYNC";                            // 同步角色状态
+        public const string EVENT_NETWORK_READY = "EVENT_NETWORK_READY";                    // 网络连接就绪
         public const string EVENT_NETWORK_INTERRUPTED = "EVENT_NETWORK_INTERRUPTED";        // 网络连接中断
     };
 
