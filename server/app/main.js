@@ -3,7 +3,7 @@ net.createServer(function(socket) {
 	console.log("有新的连接");
 	socket.on("data", function(data) {
 		console.log("request: " + data);
-		socket.write("收到了：" + data);
+		socket.write('{"pid":1,"retCode":0}');
 	});
 	socket.on("end", function(data) {
 		console.log("socket end");
@@ -12,8 +12,5 @@ net.createServer(function(socket) {
 		console.log("连接已断开");
 	});
 	socket.write("Hello!");
-	setTimeout(function() {
-		socket.destroy()
-	}, 2000);
-}).listen(12345);
+}).listen(19621);
 console.log("started");

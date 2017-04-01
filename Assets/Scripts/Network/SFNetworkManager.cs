@@ -55,6 +55,9 @@ namespace SF
 
         public void init()
         {
+            SFUtils.log("正在连接GameServer...");
+            m_sendQueue = new Queue<string>();
+            m_recvQueue = new Queue<string>();
             dispatcher = new SFEventDispatcher(this);
             m_client = new SFTcpClient();
             m_client.init("127.0.0.1", 19621, onRecvMsg, ret =>
@@ -73,9 +76,6 @@ namespace SF
                 {
                     dispatcher.dispatchEvent(e);
                 });
-            m_sendQueue = new Queue<string>();
-            m_recvQueue = new Queue<string>();
-            SFUtils.log("正在连接GameServer...");
         }
 
         public void uninit()
@@ -96,6 +96,15 @@ namespace SF
         }
 
         /// <summary>
+        /// 服务器是否就绪
+        /// </summary>
+        /// <returns><c>true</c> if game server is ready; otherwise, <c>false</c>.</returns>
+        public bool isReady()
+        {
+            return m_client != null && m_client.isReady;
+        }
+
+        /// <summary>
         /// 往服务器发送信息
         /// </summary>
         /// <param name="req">请求信息</param>
@@ -110,11 +119,11 @@ namespace SF
             m_recvQueue.Enqueue(msg);
         }
 
-        void update(float dt)
+        public void update(float dt)
         {
             while (m_sendQueue.Count > 0)
             {
-                string data = m_recvQueue.Dequeue();
+                string data = m_sendQueue.Dequeue();
                 m_client.sendData(data);
                 SFUtils.log("Sending message[]: ", 0, data);
             }
@@ -136,7 +145,7 @@ namespace SF
                 }
                 else
                 {
-                    SFUtils.logWarning("不能解析的信息格式");
+                    SFUtils.logWarning("不能解析的信息格式:\n" + data);
                 }
             }
         }

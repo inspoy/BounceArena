@@ -66,26 +66,26 @@ namespace SF
         {
             m_ipend = new IPEndPoint(IPAddress.Parse(ip), port);
             m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            m_socket.BeginConnect(m_ipend, result =>
-            {
-                try
-                {
-                    m_socket.EndConnect(result);
-                    m_isReady = true;
-                    m_stateCallback((int)ESocketState.eST_OK);
-                    socketRecv();
-                }
-                catch (Exception)
-                {
-                    m_stateCallback((int)ESocketState.eST_Error);
-                }
-            }, null);
             m_callback = callback;
             m_stateCallback = stateCallback;
             m_isReady = false;
             m_totalSend = 0;
             m_totalRecv = 0;
             m_startTime = SFUtils.getTimeStampNow();
+            m_socket.BeginConnect(m_ipend, result =>
+                {
+                    try
+                    {
+                        m_socket.EndConnect(result);
+                        m_isReady = true;
+                        m_stateCallback((int)ESocketState.eST_OK);
+                        socketRecv();
+                    }
+                    catch (Exception)
+                    {
+                        m_stateCallback((int)ESocketState.eST_Error);
+                    }
+                }, null);
         }
 
         public void uninit()
@@ -162,6 +162,7 @@ namespace SF
                     else
                     {
                         m_socket.Close();
+                        SFUtils.logWarning("网络连接中断");
                         m_isReady = false;
                         dispatcher.dispatchEvent(SFEvent.EVENT_NETWORK_INTERRUPTED);
                     }

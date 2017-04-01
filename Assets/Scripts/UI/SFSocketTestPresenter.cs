@@ -15,8 +15,8 @@ namespace SF
     public class SFSocketTestPresenter : ISFBasePresenter
     {
         SFSocketTestView m_view;
-        SFTcpClient m_client;
         string m_infoMsg;
+        SFNetworkManager m_mgr;
 
         public void initWithView(SFBaseView view)
         {
@@ -26,27 +26,25 @@ namespace SF
             m_view.addEventListener(m_view.btnConnect, SFEvent.EVENT_UI_CLICK, onConnect);
             m_view.addEventListener(m_view.btnDisconnect, SFEvent.EVENT_UI_CLICK, onDisconnect);
 
-            m_client = new SFTcpClient();
-            m_client.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_INTERRUPTED, onInterrupt);
+            m_mgr = SFNetworkManager.getInstance();
             m_view.setUpdator(update);
             m_infoMsg = "";
         }
 
         public void onViewRemoved()
         {
-            if (m_client.isReady)
-            {
-                onDisconnect(null);
-            }
         }
 
         void onSend(SFEvent e)
         {
-            if (m_client.isReady)
+            if (m_mgr.isReady())
             {
                 string content = m_view.txtMsg.text;
                 SFUtils.log("正在发送 " + content);
-                m_client.sendData(content);
+                SFRequestMsgUnitLogin req = new SFRequestMsgUnitLogin();
+                req.uid = "abc";
+                req.loginOrOut = 1;
+                m_mgr.SendMessage(req);
             }
             else
             {
@@ -56,14 +54,18 @@ namespace SF
 
         void onConnect(SFEvent e)
         {
-            if (m_client.isReady)
+            if (m_mgr.isReady())
             {
                 m_infoMsg = "已经连接过了";
                 return;
             }
-            m_client.init("127.0.0.1", 12345, onRecvMsg, result =>
+            m_infoMsg = "正在连接服务器";
+            Debug.Log("1");
+            m_mgr.init();
+            m_mgr.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_READY, result =>
                 {
-                    if (result == 0)
+                    SFSimpleEventData retCode = result.data as SFSimpleEventData;
+                    if (retCode.intVal == 0)
                     {
                         m_infoMsg = "服务器连接成功";
                     }
@@ -71,18 +73,20 @@ namespace SF
                     {
                         m_infoMsg = "服务器连接失败";
                     }
+                    Debug.Log("2:" + retCode.intVal.ToString());
                 });
-            m_infoMsg = "正在连接服务器";
+            m_mgr.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_INTERRUPTED, onInterrupt);
+            m_mgr.dispatcher.addEventListener(SFResponseMsgUnitLogin.pName, onRecvMsg);
         }
 
         void onDisconnect(SFEvent e)
         {
-            if (!m_client.isReady)
+            if (!m_mgr.isReady())
             {
                 m_infoMsg = "本来就没有连接";
                 return;
             }
-            m_client.close();
+            m_mgr.uninit();
             m_infoMsg = "连接已断开";
         }
 
@@ -91,10 +95,9 @@ namespace SF
             m_infoMsg = "网络连接中断";
         }
 
-        void onRecvMsg(string msg)
+        void onRecvMsg(SFEvent e)
         {
-            SFUtils.log("Recv msg: " + msg);
-            m_infoMsg = msg;
+            m_infoMsg = "登陆成功";
         }
 
         void update(float dt)
