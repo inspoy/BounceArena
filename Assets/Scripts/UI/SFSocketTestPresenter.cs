@@ -44,7 +44,7 @@ namespace SF
                 SFRequestMsgUnitLogin req = new SFRequestMsgUnitLogin();
                 req.uid = "abc";
                 req.loginOrOut = 1;
-                m_mgr.SendMessage(req);
+                m_mgr.sendMessage(req);
             }
             else
             {
@@ -60,7 +60,6 @@ namespace SF
                 return;
             }
             m_infoMsg = "正在连接服务器";
-            Debug.Log("1");
             m_mgr.init();
             m_mgr.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_READY, result =>
                 {
@@ -73,7 +72,6 @@ namespace SF
                     {
                         m_infoMsg = "服务器连接失败";
                     }
-                    Debug.Log("2:" + retCode.intVal.ToString());
                 });
             m_mgr.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_INTERRUPTED, onInterrupt);
             m_mgr.dispatcher.addEventListener(SFResponseMsgUnitLogin.pName, onRecvMsg);

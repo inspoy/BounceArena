@@ -88,23 +88,19 @@ namespace SF
                 }, null);
         }
 
+        /// <summary>
+        /// 关闭TCP客户端
+        /// </summary>
         public void uninit()
         {
             if (m_socket != null)
             {
+                if (m_socket.Connected)
+                {
+                    m_socket.Disconnect(false);
+                }
                 m_socket.Close();
-            }
-            m_isReady = false;
-        }
-
-        /// <summary>
-        /// 关闭Socket连接
-        /// </summary>
-        public void close()
-        {
-            if (m_socket != null && m_socket.Connected)
-            {
-                m_socket.Disconnect(false);
+                m_socket = null;
             }
             m_isReady = false;
             long endTime = SFUtils.getTimeStampNow();
@@ -142,42 +138,39 @@ namespace SF
 
         void socketRecv()
         {
-            try
+            if (m_socket.Connected && m_isReady)
             {
-                if (!m_socket.Connected || !m_isReady)
-                {
-                    throw new Exception("Socket is not connected");
-                }
-                byte[] data = new byte[1024];
+                byte[] data = new byte[1024]; // 以1024字节为单位接收数据
                 m_socket.BeginReceive(data, 0, data.Length, SocketFlags.None, result =>
                 {
-                    int length = m_socket.EndReceive(result);
-                    m_totalRecv += length;
-                    // 解码并执行回调
-                    if (length > 0)
+                    try
                     {
-                        onRecvMsg(Encoding.UTF8.GetString(data));
-                        socketRecv();
+                        int length = m_socket.EndReceive(result);
+                        m_totalRecv += length;
+                        // 解码并执行回调
+                        if (length > 0)
+                        {
+                            onRecvMsg(Encoding.UTF8.GetString(data));
+                            socketRecv();
+                        }
+                        else
+                        {
+                            throw new Exception("Socket recv 0 byte");
+                        }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        m_socket.Close();
-                        SFUtils.logWarning("网络连接中断");
-                        m_isReady = false;
+                        uninit();
+                        SFUtils.logWarning("网络连接中断：" + e.Message);
                         dispatcher.dispatchEvent(SFEvent.EVENT_NETWORK_INTERRUPTED);
                     }
                 }, null);
-            }
-            catch (Exception e)
-            {
-                SFUtils.logWarning("网络连接中断：" + e.Message);
-                m_isReady = false;
-                dispatcher.dispatchEvent(SFEvent.EVENT_NETWORK_INTERRUPTED);
             }
         }
 
         void onRecvMsg(string data)
         {
+            // 分包操作
             m_callback(data);
         }
     }

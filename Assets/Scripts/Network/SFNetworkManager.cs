@@ -108,7 +108,7 @@ namespace SF
         /// 往服务器发送信息
         /// </summary>
         /// <param name="req">请求信息</param>
-        public void SendMessage(SFBaseRequestMessage req)
+        public void sendMessage(SFBaseRequestMessage req)
         {
             string data = JsonUtility.ToJson(req);
             m_sendQueue.Enqueue(data);
@@ -116,7 +116,10 @@ namespace SF
 
         void onRecvMsg(string msg)
         {
-            m_recvQueue.Enqueue(msg);
+            lock (m_recvQueue)
+            {
+                m_recvQueue.Enqueue(msg);
+            }
         }
 
         public void update(float dt)
@@ -125,7 +128,7 @@ namespace SF
             {
                 string data = m_sendQueue.Dequeue();
                 m_client.sendData(data);
-                SFUtils.log("Sending message[]: ", 0, data);
+                SFUtils.log("Sending message[{0}]: {1}", 0, data.Length, data);
             }
             while (m_recvQueue.Count > 0)
             {

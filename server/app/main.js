@@ -1,6 +1,6 @@
 const net = require("net");
 net.createServer(function(socket) {
-	console.log("有新的连接");
+	console.log("有新的连接:" + socket.remoteAddress);
 	socket.on("data", function(data) {
 		console.log("request: " + data);
 		socket.write('{"pid":1,"retCode":0}');
