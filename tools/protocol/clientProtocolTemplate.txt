@@ -18,6 +18,11 @@ namespace SF
         /// 用户id
         /// </summary>
         public string uid;
+
+        public SFBaseRequestMessage()
+        {
+            uid = SFUserData.instance.uid;
+        }
     };
     /// <summary>
     /// 基础响应协议类型，同时也可以作为事件数据来传递

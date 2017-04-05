@@ -95,6 +95,10 @@ namespace SF
             {
                 m_recvQueue = null;
             }
+            if (dispatcher != null)
+            {
+                dispatcher.removeAllEventListeners();
+            }
         }
 
         /// <summary>

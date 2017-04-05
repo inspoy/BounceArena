@@ -642,6 +642,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1959027537}
   - component: {fileID: 1959027536}
+  - component: {fileID: 1959027535}
   m_Layer: 0
   m_Name: SceneMgr
   m_TagString: Untagged
@@ -649,6 +650,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1959027535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1959027534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f771897f9a7b148feb6ba5cd974c93c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cube: {fileID: 612420699}
 --- !u!114 &1959027536
 MonoBehaviour:
   m_ObjectHideFlags: 0

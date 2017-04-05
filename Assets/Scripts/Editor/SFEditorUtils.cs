@@ -71,7 +71,7 @@ namespace SF
                     sw2.Write(presenterContent);
                     sw2.Close();
                     // 添加文件头部的注释
-                    SFScriptHeaderGenerator.OnWillCreateAsset(presenterFilepath);
+//                    SFScriptHeaderGenerator.OnWillCreateAsset(presenterFilepath); // 暂时注释掉，这个方法貌似会自动调用，手动添加可能会导致有两段重复信息
                 }
             }
 
