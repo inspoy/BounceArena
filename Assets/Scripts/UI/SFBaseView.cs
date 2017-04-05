@@ -44,6 +44,11 @@ public class SFBaseView : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 设置Update函数
+    /// </summary>
+    /// <param name="updator">update函数</param>
+    /// <param name="isFixed"><c>true</c>表示使用FixedUpdate</param>
     public void setUpdator(SFViewUdpate updator, bool isFixed = false)
     {
         if (isFixed)

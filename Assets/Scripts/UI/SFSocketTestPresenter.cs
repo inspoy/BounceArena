@@ -26,7 +26,7 @@ namespace SF
             m_view.addEventListener(m_view.btnConnect, SFEvent.EVENT_UI_CLICK, onConnect);
             m_view.addEventListener(m_view.btnDisconnect, SFEvent.EVENT_UI_CLICK, onDisconnect);
 
-            m_mgr = SFNetworkManager.getInstance();
+            m_mgr = SFNetworkManager.instance;
             m_view.setUpdator(update);
             m_infoMsg = "";
         }

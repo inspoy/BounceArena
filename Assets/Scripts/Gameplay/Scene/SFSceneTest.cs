@@ -13,6 +13,6 @@ public class SFSceneTest : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        SFSceneManager.addView("vwSocketTest");
+        SFSceneManager.addView("vwLogin");
     }
 }

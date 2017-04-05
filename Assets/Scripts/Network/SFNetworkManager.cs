@@ -43,8 +43,10 @@ namespace SF
         /// <summary>
         /// 获取唯一实例
         /// </summary>
-        /// <returns>The instance.</returns>
-        public static SFNetworkManager getInstance()
+        /// <value>The instance.</value>
+        public static SFNetworkManager instance { get { return getInstance(); } }
+
+        private static SFNetworkManager getInstance()
         {
             if (null == sm_instance)
             {
@@ -60,7 +62,7 @@ namespace SF
             m_recvQueue = new Queue<string>();
             dispatcher = new SFEventDispatcher(this);
             m_client = new SFTcpClient();
-            m_client.init("127.0.0.1", 19621, onRecvMsg, ret =>
+            m_client.init(SFUserData.instance.serverIp, SFUserData.instance.serverPort, onRecvMsg, ret =>
                 {
                     if (ret == 0)
                     {

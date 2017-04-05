@@ -79,9 +79,14 @@ public class SFSceneManager : MonoBehaviour
     {
         // 需要Update的都放在这里
         float dt = Time.fixedDeltaTime;
-        if (SFNetworkManager.getInstance().isReady())
+        if (SFNetworkManager.instance.isReady())
         {
-            SFNetworkManager.getInstance().update(dt);
+            SFNetworkManager.instance.update(dt);
         }
+    }
+
+    void OnApplicationQuit()
+    {
+        SFNetworkManager.instance.uninit();
     }
 }

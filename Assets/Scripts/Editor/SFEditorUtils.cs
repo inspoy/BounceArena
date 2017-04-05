@@ -120,7 +120,7 @@ namespace SF
             presenterCode +=
                 "namespace SF\n{\n    public class SF" + viewName + "Presenter : ISFBasePresenter\n" +
                 "    {\n" +
-                "        SF" + viewName + "View m_view;\n" +
+                "        SF" + viewName + "View m_view;\n\n" +
                 "        public void initWithView(SFBaseView view)\n" +
                 "        {\n" +
                 "            m_view = view as SF" + viewName + "View;\n\n";

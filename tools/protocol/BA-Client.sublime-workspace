@@ -1,0 +1,299 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"on",
+				"onReady"
+			],
+			[
+				"req",
+				"require"
+			],
+			[
+				"r",
+				"res"
+			],
+			[
+				"file",
+				"fileid5031"
+			],
+			[
+				"PRO",
+				"CSG_PROJECT_SRC"
+			],
+			[
+				"pro",
+				"process"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"con",
+				"console"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+	],
+	"file_history":
+	[
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/tools/protocol/protocol.py",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/tools/protocol/protocol.csv",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/tools/protocol/structure.csv",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/tools/protocol/clientProtocolTemplate.txt",
+		"/Users/inspoy/Documents/qiniuUploader.pyw",
+		"/Users/inspoy/Documents/key.txt",
+		"/Users/inspoy/Documents/三国之刃编译线上安卓版本.md",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/server/app/main.js",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/Assets/Scripts/Gameplay/SFSceneTest.cs",
+		"/Users/inspoy/Documents/node/sio/main.js",
+		"/Users/inspoy/Documents/node/sio/config.json",
+		"/Users/inspoy/Documents/node/sio/index.html",
+		"/Users/inspoy/Documents/node/sio/test.js",
+		"/Users/inspoy/Documents/node/sio/index.js",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/sanguo/client/tools/Flash/ExportPngFile.jsfl",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/sanguo/design/flash/Role/Mount/mount-dress/png/tp.sh",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/Assets/Scripts/UI/SFTestPresenter.cs",
+		"/Users/inspoy/tmp/MineWar/README.md",
+		"/Users/inspoy/tmp/mw/README.md",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/Assets/Scripts/Utils/SFUIExtension.cs",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/Assets/Scripts/Event/SFUIEventLisenter.cs",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/Assets/Scripts/Utils/SFUtils.cs",
+		"/Users/inspoy/tmp/test.cpp",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/README.md",
+		"/Users/inspoy/Documents/sanguo/trunk/csg/csg/Classes/presenter/YDTreasureNewPresenter.cpp",
+		"/Users/inspoy/Documents/sanguo/trunk/csg/csg/Classes/presenter/YDTreasureNewPresenter.h",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/New Unity Project/Assets/vwTest.prefab",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/sanguo/client/tools/Flash/UIExporter4SQL.jsfl",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/sanguo/client/tools/flaImport.py",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/Assets/Scripts/Network/SFTcpClient.cs",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/server/app/SFSocketHandler.js",
+		"/Users/inspoy/CSProjects/ConsoleApp/ConsoleApp/Program.cs",
+		"/Users/inspoy/tmp/test.lua",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/electron/flaImport/app/index.css",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/electron/flaImport/app/index.html",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/electron/flaImport/app/index.js",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/gitRepos/BounceArena/Assets/Scripts/Network/SFMsgClass.cs",
+		"/Volumes/Macintosh HD/Users/inspoy/tmp/test.js",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/sanguo/design/flash/tmp/BeautySkill/png/generatePlist.py",
+		"/Volumes/Macintosh HD/Users/inspoy/Documents/sanguo/client/tools/UIPlistPacker.py",
+		"/Users/inspoy/custombash.sh",
+		"/Users/inspoy/.zshrc",
+		"/Volumes/Macintosh HD/Users/inspoy/.zshrc",
+		"/Volumes/Macintosh HD/Users/inspoy/tmp/未命名.txt"
+	],
+	"find":
+	{
+		"height": 27.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"key",
+			"g_type",
+			"link_pre",
+			"m_recvQueue",
+			"m_sendQueue",
+			"‘18’",
+			"501",
+			"5021",
+			"clearLogFile",
+			"onHeadWarePreviewInfo",
+			"onEquipRoleHeadWare",
+			"onCleanRoleHeadWare",
+			"onWearHeadWareSure",
+			"onHeadWareShopPreview",
+			"onShowHeadWareDetailInPackage",
+			"requestEquipHeadWareByType",
+			"onEquipRoleHeadWare",
+			"setHeadWareShopTbvInfo",
+			"setHeadWareItemInfo",
+			"setHeadWareShopTbvInfo",
+			"setHeroDressByGoodsID",
+			"getHairIdByGoodId",
+			"m_pArrItems",
+			"initHeadWarePackage",
+			"requestBuyHeadWare",
+			"requestHeadWareMemberList",
+			"sortHeadWareShopByInx",
+			"setHeadWarePackage",
+			"setHeadWareShop",
+			"setHeadWarePackage",
+			"requestHeadWarePackage",
+			"setHeadWarePakageInfo",
+			"requestHeadWareShop",
+			"requestHeadWarePackage",
+			"setHeadWarePakageInfo",
+			"onChangeRoleEquipInfo",
+			"onHeadWareShop",
+			"laytiara",
+			"onHeadWarePackage",
+			"intro",
+			"ongroup",
+			"onTiaragGroupButton",
+			"onGroup",
+			"onGroupTiara",
+			"onEquipHeadWare",
+			"requestEquipHeadWareByType",
+			"onBuyHeadWareSure",
+			"requestHeadWareMemberList",
+			"playUIExporter4SQL",
+			"nss",
+			"nss_",
+			"playUIExporter4SQL",
+			"saveFile",
+			"playUIExporter4SQL",
+			"multicomment"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"503"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "BA-Client.sublime-project",
+	"replace":
+	{
+		"height": 50.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 187.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

@@ -1,5 +1,5 @@
 /**
- * Created on 2017/03/24 by inspoy
+ * Created on 2017/04/05 by inspoy
  * All rights reserved.
  */
 
@@ -45,6 +45,7 @@ public class SFTestView : SFBaseView
         }
 
         m_presenter = new SFTestPresenter() as ISFBasePresenter;
+
         m_presenter.initWithView(this);
 
 #if UNITY_EDITOR
