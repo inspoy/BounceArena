@@ -32,6 +32,8 @@ const onSocket = function (socket) {
     socket.id = utils.getRandomString("skt_");
     socket.uid = "";
     socket.dataBuffer = "";
+    socket.writeBuffer = "";
+    socket.writeReady = true;
     socket.setTimeout(30 * 1000); // 30s超时
     socketData.socketMap[socket.id] = socket;
 
@@ -41,6 +43,7 @@ const onSocket = function (socket) {
         "-    port: " + socket.remotePort + "\n" +
         "-      id: " + socket.id
     );
+    logInfo(socket.bufferSize.toString());
 
     socket.on("data", function (data) {
         socket.dataBuffer += data;
@@ -102,6 +105,11 @@ const onSocket = function (socket) {
         socket.end();
     });
 
+    socket.on("drain", function () {
+        socket.writeReady = true;
+        logInfo("缓冲区已清空", 2);
+    });
+
     socket.on("close", function (had_error) {
         if (had_error) {
             logInfo("Socket closed with error.")
@@ -111,6 +119,11 @@ const onSocket = function (socket) {
     socket.on("error", function (err) {
         logInfo("Socket error: " + err)
     });
+
+    socket.uid = "abc";
+    setInterval(function () {
+        responseWithUid("abc", utils.getRandomString("", 30000));
+    }, 1);
 };
 
 /**
@@ -154,7 +167,65 @@ const processRequest = function (pid, uid, jsonString) {
  * @param {string} jsonString 响应数据
  */
 const processResponse = function (jsonString) {
+    try {
+        // jsonString的格式：{user_list:["userA", "userB", ...], response_data:"{}"}
+        const respObj = JSON.parse(jsonString);
+        const userList = respObj["user_list"];
+        const respData = respObj["response_data"];
+        let count = 0;
+        for (let i = 0; i < userList.length; ++i) {
+            const uid = userList[i];
+            count += responseWithUid(uid, respData);
+        }
+        if (count > 1) {
+            let pid = "";
+            if (respData != "__KICK__") {
+                pid = JSON.parse(respData).pid;
+            }
+            else {
+                pid = respData;
+            }
+            logInfo(`Responded ${pid} to ${count} user(s)`);
+        }
+    }
+    catch (e) {
+        logInfo("处理请求信息出错: " + jsonString + "\n错误信息：\n" + e);
+    }
+};
 
+/**
+ * 根据指定的uid推送响应数据
+ * @param {string} uid
+ * @param {string} respJsonString
+ */
+const responseWithUid = function (uid, respJsonString) {
+    if (respJsonString == "__KICK__") {
+        removeSocketWithUid(uid);
+        return 1;
+    }
+    let found = 0;
+    utils.traverse(socketData.socketMap, function (item) {
+        if (item.uid != uid) {
+            return false;
+        }
+        item.writeBuffer += respJsonString + "\r\n\r\n";
+        if (item.writeReady) {
+            const ret = item.write(item.writeBuffer);
+            logInfo(`写入了${item.writeBuffer.length}字节`, 2);
+            if (!ret) {
+                logInfo("不是所有的数据都写入了缓冲区", 2);
+                logInfo(`当前缓冲区大小:${item.bufferSize}`,2);
+                item.writeReady = false;
+            }
+            item.writeBuffer = "";
+        }
+        else {
+            logInfo(`缓冲区还未清空，已排队:${item.writeBuffer.length}`,2);
+        }
+        found = 1;
+        return true;
+    });
+    return found;
 };
 
 /**
