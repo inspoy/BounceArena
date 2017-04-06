@@ -122,7 +122,7 @@ const onSocket = function (socket) {
 
     socket.uid = "abc";
     setInterval(function () {
-        responseWithUid("abc", utils.getRandomString("", 30000));
+        responseWithUid("abc", utils.getRandomString("", 1996));
     }, 1);
 };
 
