@@ -4,56 +4,97 @@
 
 "use strict";
 const net = require("net");
+const utils = require("./Conf/SFUtils");
 const commonConf = require("./Conf/SFCommonConf");
 const socketData = require("./Data/SFSocketData");
 
-const logInfo = function (msg) {
+/**
+ * 写日志
+ * @param msg 日志内容
+ * @param level 等级，数字越大优先级越低，默认0
+ */
+const logInfo = function (msg, level = 0) {
     if (msg) {
         const msgObj = {
             type: "LOG",
+            level: level,
             data: msg.toString()
         };
         process.send(msgObj);
     }
 };
 
+/**
+ * 有新连接时调用
+ * @param {object} socket socket连接
+ */
 const onSocket = function (socket) {
-    logInfo("有新的连接:");
-    logInfo("- address: " + socket.remoteAddress);
-    logInfo("-    port: " + socket.remotePort);
+    socket.id = utils.getRandomString("skt_");
     socket.uid = "";
     socket.dataBuffer = "";
     socket.setTimeout(30 * 1000); // 30s超时
-    socketData.socketList.push(socket);
+    socketData.socketMap[socket.id] = socket;
+
+    logInfo(
+        "有新的连接:\n" +
+        "- address: " + socket.remoteAddress + "\n" +
+        "-    port: " + socket.remotePort + "\n" +
+        "-      id: " + socket.id
+    );
 
     socket.on("data", function (data) {
-        console.log("request: " + data);
-        socket.write('{"pid":1,"retCode":0}');
+        socket.dataBuffer += data;
+        while (true) {
+            const idx = socket.dataBuffer.indexOf("\r\n\r\n");
+            if (idx == -1) {
+                break;
+            }
+            const req = socket.dataBuffer.substr(0, idx);
+            socket.dataBuffer = socket.dataBuffer.substr(idx + 4);
+            logInfo("request: " + req, 1);
+            try {
+                const reqObj = JSON.parse(req);
+                const pid = reqObj.pid;
+                const uid = reqObj.uid;
+                // 防止重复登录
+                let check = true;
+                if (pid == 1 && reqObj["loginOrOut"] == 1) {
+                    utils.traverse(socketData.socketMap, function (item) {
+                        if (item.uid == uid) {
+                            check = false;
+                            return true;
+                        }
+                    });
+                }
+                if (check) {
+                    processRequest(pid, uid, req);
+                }
+                else {
+                    socket.write(`{"pid":1,"retCode":commonConf.errCode.duplicatedLogin}\r\n\r\n`);
+                }
+            }
+            catch (e) {
+                logInfo(
+                    "不能解析的协议: " + req + "\n" +
+                    "错误信息: " + e);
+            }
+        }
     });
 
     socket.on("end", function () {
-        let uid = "";
-        let found = false;
-        for (let i = 0; i < socketData.socketList.length; ++i) {
-            const item = socketData.socketList[i];
-            if (socket == item) {
-                found = true;
-                uid = item.uid;
-                socketData.socketList.splice(i, 1);
-                break;
-            }
-        }
-        if (found) {
+        if (socketData.socketMap.hasOwnProperty(socket.id)) {
+            let uid = socketData.socketMap[socket.id].uid;
+            delete socketData.socketMap[socket.id];
             if (uid == "") {
                 uid = "unknown";
             }
             else {
                 // 找到了uid，说明这个user已经登陆但是意外掉线，告诉GameServer用户登出
                 const data = `{"pid":1,"uid":${uid},"loginOrOut":2}`;
-                processProtocol(1, uid, data)
+                processRequest(1, uid, data)
             }
         }
-        logInfo("连接已断开: " + uid);
+        logInfo("连接已断开: " + socket.id);
     });
 
     socket.on("timeout", function () {
@@ -72,29 +113,53 @@ const onSocket = function (socket) {
     });
 };
 
+/**
+ * 根据指定的uid移除socket对象，并断开连接
+ * @param {string} uid
+ */
 const removeSocketWithUid = function (uid) {
     if (uid) {
-        for (let i = 0; i < socketData.socketList.length; ++i) {
-            const item = socketData.socketList[i];
+        utils.traverse(socketData.socketMap, function (item) {
             if (item.uid == uid) {
                 item.end();
             }
-        }
+        });
     }
 };
 
-const processProtocol = function (pid, uid, jsonString) {
+/**
+ * 处理请求
+ * @param {number} pid 协议号
+ * @param {string} uid 用户id
+ * @param {string} jsonString 请求数据
+ */
+const processRequest = function (pid, uid, jsonString) {
+    if (pid == undefined || uid == undefined) {
+        throw "Unknown pid or uid";
+    }
+
     if (pid > 0) {
         process.send({type: "REQ", data: jsonString});
     }
     else {
         // pid <= 0为socket层的协议，无需GameServer处理
-        if (pid == -1) {
+        if (pid == 0) {
             // 心跳包
         }
     }
 };
 
+/**
+ * 处理GameServer发来的响应
+ * @param {string} jsonString 响应数据
+ */
+const processResponse = function (jsonString) {
+
+};
+
+/**
+ * 程序入口
+ */
 const main = function () {
     process.on("SIGINT", function () {
         console.log("SocketHandler即将退出");

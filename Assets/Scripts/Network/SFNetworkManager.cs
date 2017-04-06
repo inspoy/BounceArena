@@ -228,6 +228,7 @@ namespace SF
             var now = DateTime.Now;
             var diff = now.Subtract(m_heartbeatStartTime);
             m_ping = diff.TotalMilliseconds;
+            SFUtils.log("ping: {0:F2}", 0, m_ping);
             dispatcher.dispatchEvent(SFEvent.EVENT_NETWORK_PING);
         }
     }

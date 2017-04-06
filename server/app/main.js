@@ -14,6 +14,7 @@ const main = function () {
         socketHandler.on("message", function (msg) {
             if (msg.type == "LOG") {
                 if (commconConfig.enableLog_SocketHandler) {
+                    if (msg.level <= commconConfig.logLevel)
                     console.log("[SocketHandler] - " + msg.data);
                 }
             }
