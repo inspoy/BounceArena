@@ -48,6 +48,7 @@ namespace SF
         public const string EVENT_UNIT_SYNC = "EVENT_UNIT_SYNC";                            // 同步角色状态
         public const string EVENT_NETWORK_READY = "EVENT_NETWORK_READY";                    // 网络连接就绪
         public const string EVENT_NETWORK_INTERRUPTED = "EVENT_NETWORK_INTERRUPTED";        // 网络连接中断
+        public const string EVENT_NETWORK_PING = "EVENT_NETWORK_PING";                      // 网络延迟更新
     };
 
     /// <summary>

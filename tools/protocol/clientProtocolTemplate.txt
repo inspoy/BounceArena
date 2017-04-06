@@ -24,6 +24,7 @@ namespace SF
             uid = SFUserData.instance.uid;
         }
     };
+
     /// <summary>
     /// 基础响应协议类型，同时也可以作为事件数据来传递
     /// </summary>

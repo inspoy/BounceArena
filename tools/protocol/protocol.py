@@ -93,8 +93,7 @@ def write_client_protool(protocols):
             res += "    [Serializable]\n"
             res += "    public class SFRequestMsg%s : SFBaseRequestMessage\n" % name
             res += "    {\n" \
-                   "        public const string pName = \"socket_%s\";\n" % pid
-            res += "        public SFRequestMsg%s()\n" \
+                   "        public SFRequestMsg%s()\n" \
                    "        {\n" \
                    "            pid = %s;\n" \
                    "        }\n" % (name, pid)
@@ -339,7 +338,7 @@ def main():
 
     write_client_protool(protocols)
     write_client_structure(structures)
-    write_server(protocols, structures)
+    # write_server(protocols, structures)
 
     # copy
     source_filename = "./SFMsgClass.protocol.cs"
@@ -367,17 +366,20 @@ def main():
         print("Did not copy SFProtocolMessage.js")
 
     # TODO
+    print("\nCopy the following code to SFNetworkManager.cs:")
+    print("vvvvvvvvvv");
     for item in protocols:
       pid = item["pid"]
       name = item["name"]
       res = ""
       res += "                else if (pid == %s)\n" \
              "                {\n" \
-             "                    obj = JsonUtility.FromJson<SFResponseMsg%s>(data);\n" \
+             "                    obj = JsonUtility.FromJson<SFResponseMsg%s>(jsonData);\n" \
              "                }" % (pid, name)
       print(res)
     # end for
     pass
+    print("^^^^^^^^^^");
 
 
 if __name__ == "__main__":

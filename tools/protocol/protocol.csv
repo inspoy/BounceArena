@@ -1,3 +1,8 @@
+pid,0,,
+name,SocketHeartbeat,,
+desc,心跳包,,
+req,_PH,,
+END,,,
 pid,1,,
 name,UnitLogin,,
 desc,用户登陆登出,,

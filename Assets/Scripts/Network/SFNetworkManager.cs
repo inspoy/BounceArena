@@ -3,6 +3,7 @@
  * All rights reserved.
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,9 +23,14 @@ namespace SF
         /// <value>The client.</value>
         public SFTcpClient client { get { return m_client; } }
 
+        public double ping{ get { return m_ping; } }
+
         SFTcpClient m_client;
         Queue<string> m_sendQueue;
         Queue<string> m_recvQueue;
+        double m_ping;
+        DateTime m_heartbeatStartTime;
+        double m_heartbeatTimer;
 
         private SFNetworkManager()
         {
@@ -62,6 +68,8 @@ namespace SF
             m_recvQueue = new Queue<string>();
             dispatcher = new SFEventDispatcher(this);
             m_client = new SFTcpClient();
+            m_ping = -1;
+            m_heartbeatTimer = 0;
             m_client.init(SFUserData.instance.serverIp, SFUserData.instance.serverPort, onRecvMsg, ret =>
                 {
                     if (ret == 0)
@@ -78,6 +86,7 @@ namespace SF
                 {
                     dispatcher.dispatchEvent(e);
                 });
+            dispatcher.addEventListener(SFResponseMsgSocketHeartbeat.pName, onHeartbeat);
         }
 
         public void uninit()
@@ -130,12 +139,15 @@ namespace SF
 
         public void update(float dt)
         {
+            // 发送队列
             while (m_sendQueue.Count > 0)
             {
                 string data = m_sendQueue.Dequeue();
                 m_client.sendData(data);
                 SFUtils.log("Sending message[{0}]: {1}", 0, data.Length, data);
             }
+
+            // 接收队列
             while (m_recvQueue.Count > 0)
             {
                 string data = m_recvQueue.Dequeue();
@@ -157,6 +169,14 @@ namespace SF
                     SFUtils.logWarning("不能解析的信息格式:\n" + data);
                 }
             }
+
+            // 心跳包
+            m_heartbeatTimer += dt;
+            if (m_heartbeatTimer > SFCommonConf.instance.heatbeatInterval)
+            {
+                m_heartbeatTimer -= SFCommonConf.instance.heatbeatInterval;
+                sendHeartbeat();
+            }
         }
 
         void handleProtocol(int pid, string jsonData)
@@ -169,9 +189,17 @@ namespace SF
                 if (pid == 0)
                 {
                 } // __start__
+                else if (pid == 0)
+                {
+                    obj = JsonUtility.FromJson<SFResponseMsgSocketHeartbeat>(jsonData);
+                }
                 else if (pid == 1)
                 {
                     obj = JsonUtility.FromJson<SFResponseMsgUnitLogin>(jsonData);
+                }
+                else if (pid == 2)
+                {
+                    obj = JsonUtility.FromJson<SFResponseMsgNotifyRemoteUsers>(jsonData);
                 }
                 else // __end__
                 {
@@ -186,6 +214,21 @@ namespace SF
             {
                 SFUtils.logWarning("解析协议失败: {0}\ndata: {1}", 0, pid, jsonData);
             }
+        }
+
+        void sendHeartbeat()
+        {
+            m_heartbeatStartTime = DateTime.Now;
+            SFRequestMsgSocketHeartbeat req = new SFRequestMsgSocketHeartbeat();
+            sendMessage(req);
+        }
+
+        void onHeartbeat(SFEvent e)
+        {
+            var now = DateTime.Now;
+            var diff = now.Subtract(m_heartbeatStartTime);
+            m_ping = diff.TotalMilliseconds;
+            dispatcher.dispatchEvent(SFEvent.EVENT_NETWORK_PING);
         }
     }
 }
