@@ -42,3 +42,19 @@ exports.traverse = function(obj, callback) {
         }
     }
 };
+
+/**
+ * 写日志
+ * @param msg 日志内容
+ * @param level 等级，数字越大优先级越低，默认0
+ */
+exports.logInfo = function (msg, level = 0) {
+    if (msg) {
+        const msgObj = {
+            type: "LOG",
+            level: level,
+            data: msg.toString()
+        };
+        process.send(msgObj);
+    }
+};

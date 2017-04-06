@@ -50,6 +50,7 @@ namespace SF
         long m_totalSend;
         long m_totalRecv;
         long m_startTime;
+        string m_recvBuffer;
 
         public SFTcpClient()
         {
@@ -72,6 +73,7 @@ namespace SF
             m_totalSend = 0;
             m_totalRecv = 0;
             m_startTime = SFUtils.getTimeStampNow();
+            m_recvBuffer = "";
             m_socket.BeginConnect(m_ipend, result =>
                 {
                     try
@@ -127,12 +129,12 @@ namespace SF
             try
             {
                 // 编码
-                byte[] data = Encoding.UTF8.GetBytes(msg);
+                byte[] data = Encoding.UTF8.GetBytes(msg + "\r\n\r\n");
                 m_socket.BeginSend(data, 0, data.Length, SocketFlags.None, result =>
-                {
-                    // 发送完成
-                    m_socket.EndSend(result);
-                }, null);
+                    {
+                        // 发送完成
+                        m_socket.EndSend(result);
+                    }, null);
                 m_totalSend += data.Length;
             }
             catch (Exception e)
@@ -147,36 +149,48 @@ namespace SF
             {
                 byte[] data = new byte[1024]; // 以1024字节为单位接收数据
                 m_socket.BeginReceive(data, 0, data.Length, SocketFlags.None, result =>
-                {
-                    try
                     {
-                        int length = m_socket.EndReceive(result);
-                        m_totalRecv += length;
-                        // 解码并执行回调
-                        if (length > 0)
+                        try
                         {
-                            onRecvMsg(Encoding.UTF8.GetString(data));
-                            socketRecv();
+                            int length = m_socket.EndReceive(result);
+                            m_totalRecv += length;
+                            // 解码并执行回调
+                            if (length > 0)
+                            {
+                                string str = Encoding.UTF8.GetString(data);
+                                onRecvMsg(str, length);
+                                socketRecv();
+                            }
+                            else
+                            {
+                                throw new Exception("Socket recv 0 byte");
+                            }
                         }
-                        else
+                        catch (Exception e)
                         {
-                            throw new Exception("Socket recv 0 byte");
+                            uninit();
+                            SFUtils.logWarning("网络连接中断：" + e.Message);
+                            dispatcher.dispatchEvent(SFEvent.EVENT_NETWORK_INTERRUPTED);
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        uninit();
-                        SFUtils.logWarning("网络连接中断：" + e.Message);
-                        dispatcher.dispatchEvent(SFEvent.EVENT_NETWORK_INTERRUPTED);
-                    }
-                }, null);
+                    }, null);
             }
         }
 
-        void onRecvMsg(string data)
+        void onRecvMsg(string data, int length)
         {
+            m_recvBuffer += data.Substring(0, length);
             // 分包操作
-            m_callback(data);
+            while (true)
+            {
+                int idx = m_recvBuffer.IndexOf("\r\n\r\n");
+                if (idx == -1)
+                {
+                    break;
+                }
+                string packet = m_recvBuffer.Substring(0, idx);
+                m_recvBuffer = m_recvBuffer.Substring(idx + 4);
+                m_callback(packet);
+            }
         }
     }
 }

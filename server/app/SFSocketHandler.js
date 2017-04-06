@@ -3,26 +3,12 @@
  */
 
 "use strict";
+
 const net = require("net");
 const utils = require("./Conf/SFUtils");
 const commonConf = require("./Conf/SFCommonConf");
 const socketData = require("./Data/SFSocketData");
-
-/**
- * 写日志
- * @param msg 日志内容
- * @param level 等级，数字越大优先级越低，默认0
- */
-const logInfo = function (msg, level = 0) {
-    if (msg) {
-        const msgObj = {
-            type: "LOG",
-            level: level,
-            data: msg.toString()
-        };
-        process.send(msgObj);
-    }
-};
+const logInfo = utils.logInfo;
 
 /**
  * 有新连接时调用
@@ -43,7 +29,6 @@ const onSocket = function (socket) {
         "-    port: " + socket.remotePort + "\n" +
         "-      id: " + socket.id
     );
-    logInfo(socket.bufferSize.toString());
 
     socket.on("data", function (data) {
         socket.dataBuffer += data;
@@ -54,11 +39,13 @@ const onSocket = function (socket) {
             }
             const req = socket.dataBuffer.substr(0, idx);
             socket.dataBuffer = socket.dataBuffer.substr(idx + 4);
-            logInfo("request: " + req, 1);
             try {
                 const reqObj = JSON.parse(req);
                 const pid = reqObj.pid;
                 const uid = reqObj.uid;
+                if (pid != 0) {
+                    logInfo("request: " + req, 1);
+                }
                 // 防止重复登录
                 let check = true;
                 if (pid == 1 && reqObj["loginOrOut"] == 1) {
@@ -68,12 +55,14 @@ const onSocket = function (socket) {
                             return true;
                         }
                     });
+                    socket.uid = uid;
                 }
                 if (check) {
                     processRequest(pid, uid, req);
                 }
                 else {
-                    socket.write(`{"pid":1,"retCode":commonConf.errCode.duplicatedLogin}\r\n\r\n`);
+                    logInfo("重复登陆：" + uid);
+                    socket.write(`{"pid":1,"retCode":${commonConf.errCode.duplicatedLogin}\r\n\r\n`);
                 }
             }
             catch (e) {
@@ -87,15 +76,15 @@ const onSocket = function (socket) {
     socket.on("end", function () {
         if (socketData.socketMap.hasOwnProperty(socket.id)) {
             let uid = socketData.socketMap[socket.id].uid;
-            delete socketData.socketMap[socket.id];
             if (uid == "") {
                 uid = "unknown";
             }
             else {
                 // 找到了uid，说明这个user已经登陆但是意外掉线，告诉GameServer用户登出
-                const data = `{"pid":1,"uid":${uid},"loginOrOut":2}`;
+                const data = `{"pid":1,"uid":"${uid}","loginOrOut":2}`;
                 processRequest(1, uid, data)
             }
+            delete socketData.socketMap[socket.id];
         }
         logInfo("连接已断开: " + socket.id);
     });
@@ -119,11 +108,6 @@ const onSocket = function (socket) {
     socket.on("error", function (err) {
         logInfo("Socket error: " + err)
     });
-
-    socket.uid = "abc";
-    setInterval(function () {
-        responseWithUid("abc", utils.getRandomString("", 1996));
-    }, 1);
 };
 
 /**
@@ -158,6 +142,7 @@ const processRequest = function (pid, uid, jsonString) {
         // pid <= 0为socket层的协议，无需GameServer处理
         if (pid == 0) {
             // 心跳包
+            responseWithUid(uid, '{"pid":0,"retCode":0}');
         }
     }
 };
@@ -211,16 +196,16 @@ const responseWithUid = function (uid, respJsonString) {
         item.writeBuffer += respJsonString + "\r\n\r\n";
         if (item.writeReady) {
             const ret = item.write(item.writeBuffer);
-            logInfo(`写入了${item.writeBuffer.length}字节`, 2);
+            logInfo(`写入了${item.writeBuffer.length}字节`, 3);
+            item.writeBuffer = "";
             if (!ret) {
-                logInfo("不是所有的数据都写入了缓冲区", 2);
-                logInfo(`当前缓冲区大小:${item.bufferSize}`,2);
+                logInfo("有一部分数据被暂存在了缓冲区", 2);
+                logInfo(`当前缓冲区大小:${item.bufferSize}`, 2);
                 item.writeReady = false;
             }
-            item.writeBuffer = "";
         }
         else {
-            logInfo(`缓冲区还未清空，已排队:${item.writeBuffer.length}`,2);
+            logInfo(`缓冲区还未清空，已排队:${item.writeBuffer.length}`, 2);
         }
         found = 1;
         return true;
@@ -239,7 +224,7 @@ const main = function () {
 
     process.on("message", function (data) {
         if (data.type == "RESP") {
-            // TODO: call socket.write()
+            processResponse(data.data);
         }
     });
 

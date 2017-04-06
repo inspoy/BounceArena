@@ -36,6 +36,6 @@ namespace SF
         /// <summary>
         /// 心跳包发送间隔
         /// </summary>
-        public double heatbeatInterval = 2.0;
+        public double heatbeatInterval = 5.0;
     }
 }

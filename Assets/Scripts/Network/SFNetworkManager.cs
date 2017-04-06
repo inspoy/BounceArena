@@ -162,7 +162,10 @@ namespace SF
                 if (obj != null)
                 {
                     handleProtocol(obj.pid, data);
-                    SFUtils.log("收到信息:协议号={0}\ndata={1}", 0, obj.pid, data);
+                    if (obj.pid != 0)
+                    {
+                        SFUtils.log("收到信息:协议号={0}\ndata={1}", 0, obj.pid, data);
+                    }
                 }
                 else
                 {
@@ -186,7 +189,7 @@ namespace SF
             {
                 string pName = string.Format("socket_{0}", pid);
                 SFBaseResponseMessage obj = null;
-                if (pid == 0)
+                if (pid == int.MaxValue)
                 {
                 } // __start__
                 else if (pid == 0)
