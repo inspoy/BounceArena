@@ -70,7 +70,7 @@ namespace SF
             m_client = new SFTcpClient();
             m_ping = -1;
             m_heartbeatTimer = 0;
-            m_client.init(SFUserData.instance.serverIp, SFUserData.instance.serverPort, onRecvMsg, ret =>
+            m_client.init(SFCommonConf.instance.serverIp, SFCommonConf.instance.serverPort, onRecvMsg, ret =>
                 {
                     if (ret == 0)
                     {

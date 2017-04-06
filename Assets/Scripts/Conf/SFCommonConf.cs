@@ -37,5 +37,15 @@ namespace SF
         /// 心跳包发送间隔
         /// </summary>
         public double heatbeatInterval = 5.0;
+
+        /// <summary>
+        /// 服务器IP地址
+        /// </summary>
+        public string serverIp = "127.0.0.1";
+
+        /// <summary>
+        /// 服务器端口
+        /// </summary>
+        public int serverPort = 19621;
     }
 }

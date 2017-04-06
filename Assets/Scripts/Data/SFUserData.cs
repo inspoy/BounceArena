@@ -36,16 +36,6 @@ namespace SF
         public SFEventDispatcher dispatcher;
 
         /// <summary>
-        /// 服务器IP地址
-        /// </summary>
-        public string serverIp = "127.0.0.1";
-
-        /// <summary>
-        /// 服务器端口
-        /// </summary>
-        public int serverPort = 19621;
-
-        /// <summary>
         /// 用户UID
         /// </summary>
         public string uid;
