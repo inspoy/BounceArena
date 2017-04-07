@@ -18,6 +18,7 @@ public class SFUnitManager : MonoBehaviour
     void Start()
     {
         m_heroController = GetComponent<SFHeroController>();
+        m_controllers = new Dictionary<string, SFUnitController>();
     }
 
     // Update is called once per frame
@@ -31,6 +32,7 @@ public class SFUnitManager : MonoBehaviour
     /// </summary>
     public void initUnits()
     {
+        SFUtils.log("初始化角色...");
         // 自己
         SFUnitConf heroConf;
         heroConf.uid = SFUserData.instance.uid;
@@ -54,6 +56,7 @@ public class SFUnitManager : MonoBehaviour
             conf.speedY = item.speedY;
             addUnit(conf);
         }
+        SFUtils.log("初始化角色完成");
     }
 
     /// <summary>
