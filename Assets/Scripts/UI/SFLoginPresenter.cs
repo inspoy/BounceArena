@@ -56,6 +56,7 @@ namespace SF
                     m_willReset = true;
                 });
             SFNetworkManager.instance.dispatcher.addEventListener(SFResponseMsgUnitLogin.pName, onLoginResult);
+            SFNetworkManager.instance.dispatcher.addEventListener(SFResponseMsgNotifyRemoteUsers.pName, onRemoteUsers);
         }
 
         void onConnectResult(SFEvent e)
@@ -121,6 +122,21 @@ namespace SF
         {
             var op = SceneManager.LoadSceneAsync("SceneGame");
             yield return op;
+        }
+
+        void onRemoteUsers(SFEvent e)
+        {
+            var data = e.data as SFResponseMsgNotifyRemoteUsers;
+            if (data.retCode == 0)
+            {
+                SFBattleData.instance.enterBattle_mapId = data.mapId;
+                SFBattleData.instance.enterBattle_remoteUsers = data.users;
+                SFBattleData.instance.enterBattle_posX = data.posX;
+                SFBattleData.instance.enterBattle_posY = data.posY;
+                SFBattleData.instance.enterBattle_rotation = data.rotation;
+
+                SFUtils.log("玩家初始坐标:({0}, {1}),rot={2}", data.posX, data.posY, data.rotation);
+            }
         }
     }
 }

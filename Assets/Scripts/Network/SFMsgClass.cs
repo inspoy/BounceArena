@@ -114,6 +114,11 @@ namespace SF
         }
 
         /// <summary>
+        /// 地图ID
+        /// </summary>
+        public int mapId;
+
+        /// <summary>
         /// 其他玩家的信息
         /// </summary>
         public List<SFMsgDataRemoteUserInfo> users;
@@ -134,5 +139,52 @@ namespace SF
         public float rotation;
     };
     #endregion
+
+    #region 3-发送自己的状态
+    /// <summary>
+    /// [Req]发送自己的状态
+    /// </summary>
+    [Serializable]
+    public class SFRequestMsgUnitSync : SFBaseRequestMessage
+    {
+        public SFRequestMsgUnitSync()
+        {
+            pid = 3;
+        }
+        public float posX;
+        public float posY;
+        public float rotation;
+        public int skillId;
+    };
+
+    /// <summary>
+    /// [Resp]发送自己的状态
+    /// </summary>
+    [Serializable]
+    public class SFResponseMsgUnitSync : SFBaseResponseMessage
+    {
+        public const string pName = "socket_3";
+        public SFResponseMsgUnitSync()
+        {
+            pid = 3;
+        }
+    };
+    #endregion
+
+    #region 4-推送其他角色的状态
+    /// <summary>
+    /// [Resp][Notify]推送其他角色的状态
+    /// </summary>
+    [Serializable]
+    public class SFResponseMsgNotifyUnitStatus : SFBaseResponseMessage
+    {
+        public const string pName = "socket_4";
+        public SFResponseMsgNotifyUnitStatus()
+        {
+            pid = 4;
+        }
+        public List<SFMsgDataUserSyncInfo> infos;
+    };
+    #endregion
 }
-// Last Update: 2017/04/06
+// Last Update: 2017/04/07

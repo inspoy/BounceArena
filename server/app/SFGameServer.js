@@ -5,6 +5,8 @@
 "use strict";
 
 const SFUserController = require("./Controller/SFUserController");
+const SFBattleController = require("./Controller/SFBattleController");
+const battleData = require("./Data/SFBattleData");
 const utils = require("./Conf/SFUtils");
 const logInfo = utils.logInfo;
 const controllerMap = {};
@@ -63,6 +65,7 @@ const getController = function (pid) {
  * @param {string} data
  */
 const pushMessage = function (users, data) {
+    logInfo(`将发送给${users.length}个用户: ${data}` ,3);
     if (users && users.length > 0) {
         const obj = {
             user_list: users,
@@ -82,7 +85,7 @@ const initControllers = function () {
         }
     };
     controllerMap[1] = SFUserController;
-    controllerMap[2] = null;
+    controllerMap[3] = SFBattleController;
 
     utils.traverse(controllerMap, function (item) {
         if (item && typeof(item.setPusher) == "function") {
@@ -96,6 +99,9 @@ const initControllers = function () {
  */
 const main = function () {
     initControllers();
+
+    // TODO: 先临时创建一场战斗
+    battleData.battleId = SFBattleController.createBattle();
 
     process.on("SIGINT", function () {
         console.log("GameServer即将退出");

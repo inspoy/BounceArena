@@ -11,9 +11,21 @@ namespace SF
 {
     public class SFUserData
     {
+        public class SFUserSkillConf
+        {
+            public int space;
+            public int left;
+            public int right;
+        }
+        
         // 私有构造函数
         private SFUserData()
         {
+            dispatcher      = new SFEventDispatcher(this);
+            skillConf       = new SFUserSkillConf();
+            skillConf.space = (int)ESkill.FireBall;
+            skillConf.left  = (int)ESkill.Flash;
+            skillConf.right = (int)ESkill.Shield;
         }
 
         private static SFUserData sm_instance;
@@ -24,7 +36,7 @@ namespace SF
         /// <value>The instance.</value>
         public static SFUserData instance { get { return getInstance(); } }
 
-        public static SFUserData getInstance()
+        static SFUserData getInstance()
         {
             if (null == sm_instance)
             {
@@ -39,5 +51,7 @@ namespace SF
         /// 用户UID
         /// </summary>
         public string uid;
+
+        public SFUserSkillConf skillConf;
     }
 }

@@ -3,6 +3,9 @@
  */
 
 "use strict";
+
+const events = require("events");
+
 /**
  *
  * @param {string} prefix 前缀
@@ -58,3 +61,5 @@ exports.logInfo = function (msg, level = 0) {
         process.send(msgObj);
     }
 };
+
+exports.eventDispatcher = new events.EventEmitter();

@@ -31,11 +31,22 @@ namespace SF
 
         /// <summary>
         /// 输出日志，同时输出到Unity控制台和外部log文件
+        /// 日志等级默认为LOG_LEVEL_INFO(0)
         /// </summary>
         /// <param name="msg">日志信息</param>
-        /// <param name="level">日志等级，默认为LOG_LEVEL_INFO(0)</param>
         /// <param name="paras">参数列表</param>
-        static public void log(string msg, int level = LOG_LEVEL_INFO, params object[] paras)
+        static public void log(string msg, params object[] paras)
+        {
+            logLevel(LOG_LEVEL_INFO, msg, paras);
+        }
+
+        /// <summary>
+        /// 输出日志，同时输出到Unity控制台和外部log文件
+        /// </summary>
+        /// <param name="level">日志等级</param>
+        /// <param name="msg">日志信息</param>
+        /// <param name="paras">参数列表</param>
+        static public void logLevel(int level, string msg, params object[] paras)
         {
             string logStr = msg;
             if (paras.Length > 0)

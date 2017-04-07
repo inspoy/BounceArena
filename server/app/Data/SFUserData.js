@@ -3,6 +3,14 @@
  */
 
 "use strict";
+
+class OnlineUser {
+    constructor() {
+        
+    }
+}
+
 module.exports = {
+    OnlineUser: OnlineUser,
     onlineUserList: {}
 };

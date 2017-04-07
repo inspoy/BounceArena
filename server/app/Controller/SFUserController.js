@@ -5,7 +5,10 @@
 "use strict";
 
 const userData = require("./../Data/SFUserData");
-const logInfo = require("./../Conf/SFUtils").logInfo;
+const battleData = require("./../Data/SFBattleData");
+const utils = require("./../Conf/SFUtils");
+const logInfo = utils.logInfo;
+const dispatcher = utils.eventDispatcher;
 let m_pusher = null;
 
 /**
@@ -18,14 +21,21 @@ const onRequest = function (req) {
         if (req["loginOrOut"] == 1) {
             userData.onlineUserList[req.uid] = {};
             logInfo("用户登陆：" + req.uid);
+            dispatcher.emit("onUserLogin", {uid: req.uid, battleId: battleData.battleId});
         }
         else {
             delete userData.onlineUserList[req.uid];
             logInfo("用户登出：" + req.uid);
+            dispatcher.emit("onUserLogout", {uid: req.uid, battleId: battleData.battleId});
         }
-        m_pusher([req.uid], '{"pid":1,"retCode":0}');
     }
 };
+
+const onBattleStart = function (uid) {
+    m_pusher([uid], '{"pid":1,"retCode":0}');
+};
+
+dispatcher.addListener("onBattleStart", onBattleStart);
 
 module.exports = {
     onRequest: onRequest,

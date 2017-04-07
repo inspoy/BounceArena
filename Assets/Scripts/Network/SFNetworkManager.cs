@@ -144,7 +144,7 @@ namespace SF
             {
                 string data = m_sendQueue.Dequeue();
                 m_client.sendData(data);
-                SFUtils.log("Sending message[{0}]: {1}", 0, data.Length, data);
+                SFUtils.log("Sending message[{0}]: {1}", data.Length, data);
             }
 
             // 接收队列
@@ -164,7 +164,7 @@ namespace SF
                     handleProtocol(obj.pid, data);
                     if (obj.pid != 0)
                     {
-                        SFUtils.log("收到信息:协议号={0}\ndata={1}", 0, obj.pid, data);
+                        SFUtils.log("收到信息:协议号={0}\ndata={1}", obj.pid, data);
                     }
                 }
                 else
@@ -204,6 +204,14 @@ namespace SF
                 {
                     obj = JsonUtility.FromJson<SFResponseMsgNotifyRemoteUsers>(jsonData);
                 }
+                else if (pid == 3)
+                {
+                    obj = JsonUtility.FromJson<SFResponseMsgUnitSync>(jsonData);
+                }
+                else if (pid == 4)
+                {
+                    obj = JsonUtility.FromJson<SFResponseMsgNotifyUnitStatus>(jsonData);
+                }
                 else // __end__
                 {
                     SFUtils.logWarning("不能识别的协议号: {0}", 0, pid);
@@ -231,7 +239,7 @@ namespace SF
             var now = DateTime.Now;
             var diff = now.Subtract(m_heartbeatStartTime);
             m_ping = diff.TotalMilliseconds;
-            SFUtils.log("ping: {0:F2}", 0, m_ping);
+            SFUtils.log("ping: {0:F2}", m_ping);
             dispatcher.dispatchEvent(SFEvent.EVENT_NETWORK_PING);
         }
     }

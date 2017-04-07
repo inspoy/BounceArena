@@ -19,4 +19,19 @@ namespace SF
         public float speedY;
     };
 
+    /// <summary>
+    /// 角色状态同步
+    /// </summary>
+    [Serializable]
+    public struct SFMsgDataUserSyncInfo
+    {
+        public string uid;
+        public float posX;
+        public float posY;
+        public float rotation;
+        public float speedX;
+        public float speedY;
+        public int skillId;
+    };
+
 }

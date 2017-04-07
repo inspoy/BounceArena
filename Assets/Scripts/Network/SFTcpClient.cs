@@ -111,8 +111,8 @@ namespace SF
             {
                 totalTime = 1;
             }
-            SFUtils.log("共发送{0:F2} KB, 共接收{0:F2} KB", 0, totalSendLength / 1024.0, totalRecvLength / 1024.0);
-            SFUtils.log("平均流量：{0:F2} KB/sec", 0, 1.0 * (totalSendLength + totalRecvLength) / totalTime / 1024.0);
+            SFUtils.log("共发送{0:F2} KB, 共接收{0:F2} KB", totalSendLength / 1024.0, totalRecvLength / 1024.0);
+            SFUtils.log("平均流量：{0:F2} KB/sec", 1.0 * (totalSendLength + totalRecvLength) / totalTime / 1024.0);
             SFUtils.log("连接已关闭");
         }
 
