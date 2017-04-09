@@ -26,7 +26,7 @@ namespace SF
         public double ping{ get { return m_ping; } }
 
         SFTcpClient m_client;
-        Queue<string> m_sendQueue;
+        Queue<SFBaseRequestMessage> m_sendQueue;
         Queue<string> m_recvQueue;
         double m_ping;
         DateTime m_heartbeatStartTime;
@@ -64,7 +64,7 @@ namespace SF
         public void init()
         {
             SFUtils.log("正在连接GameServer...");
-            m_sendQueue = new Queue<string>();
+            m_sendQueue = new Queue<SFBaseRequestMessage>();
             m_recvQueue = new Queue<string>();
             dispatcher = new SFEventDispatcher(this);
             m_client = new SFTcpClient();
@@ -125,8 +125,7 @@ namespace SF
         /// <param name="req">请求信息</param>
         public void sendMessage(SFBaseRequestMessage req)
         {
-            string data = JsonUtility.ToJson(req);
-            m_sendQueue.Enqueue(data);
+            m_sendQueue.Enqueue(req);
         }
 
         void onRecvMsg(string msg)
@@ -142,9 +141,13 @@ namespace SF
             // 发送队列
             while (m_sendQueue.Count > 0)
             {
-                string data = m_sendQueue.Dequeue();
+                SFBaseRequestMessage req = m_sendQueue.Dequeue();
+                string data = JsonUtility.ToJson(req);
                 m_client.sendData(data);
-                SFUtils.log("Sending message[{0}]: {1}", data.Length, data);
+                if (req.pid != 0)
+                {
+                    SFUtils.log("Sending message[{0}]: {1}", data.Length, data);
+                }
             }
 
             // 接收队列

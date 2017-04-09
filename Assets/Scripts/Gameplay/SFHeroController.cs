@@ -76,8 +76,8 @@ public class SFHeroController : MonoBehaviour
     void syncData()
     {
         SFRequestMsgUnitSync req = new SFRequestMsgUnitSync();
-        req.posX = m_lastMoveX;
-        req.posY = m_lastMoveY;
+        req.moveX = m_lastMoveX;
+        req.moveY = m_lastMoveY;
         req.rotation = m_lastRotation;
         req.skillId = m_skillId;
         SFNetworkManager.instance.sendMessage(req);

@@ -65,8 +65,8 @@ const getController = function (pid) {
  * @param {string} data
  */
 const pushMessage = function (users, data) {
-    logInfo(`将发送给${users.length}个用户: ${data}` ,3);
     if (users && users.length > 0) {
+        logInfo(`将发送给${users.length}个用户: ${data}` ,3);
         const obj = {
             user_list: users,
             response_data: data

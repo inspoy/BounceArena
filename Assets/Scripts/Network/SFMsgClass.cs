@@ -151,8 +151,8 @@ namespace SF
         {
             pid = 3;
         }
-        public float posX;
-        public float posY;
+        public float moveX;
+        public float moveY;
         public float rotation;
         public int skillId;
     };

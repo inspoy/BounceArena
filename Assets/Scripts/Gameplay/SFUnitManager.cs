@@ -19,6 +19,7 @@ public class SFUnitManager : MonoBehaviour
     {
         m_heroController = GetComponent<SFHeroController>();
         m_controllers = new Dictionary<string, SFUnitController>();
+        SFNetworkManager.instance.dispatcher.addEventListener(SFResponseMsgNotifyUnitStatus.pName, onNotifyUnitStatus);
     }
 
     // Update is called once per frame
@@ -90,5 +91,22 @@ public class SFUnitManager : MonoBehaviour
     public bool removeUnit(string uid)
     {
         return false;
+    }
+
+    void onNotifyUnitStatus(SFEvent e)
+    {
+        var data = e.data as SFResponseMsgNotifyUnitStatus;
+        var infos = data.infos;
+        foreach (var item in infos)
+        {
+            foreach (var controller in m_controllers)
+            {
+                if (controller.Key == item.uid)
+                {
+                    controller.Value.updateStatus(item);
+                    break;
+                }
+            }
+        }
     }
 }

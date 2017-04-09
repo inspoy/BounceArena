@@ -121,6 +121,7 @@ public class SFScrollRectExtension : MonoBehaviour
         m_inited = true;
         m_curLength = 0;
         m_curItemCount = 0;
+        m_items = new List<GameObject>();
     }
 
     public void addItem(GameObject item)

@@ -19,7 +19,7 @@ const onRequest = function (req) {
     if (req.pid == 1) {
         // 用户登陆登出
         if (req["loginOrOut"] == 1) {
-            userData.onlineUserList[req.uid] = {};
+            userData.onlineUserList[req.uid] = new userData.OnlineUser(req.uid);
             logInfo("用户登陆：" + req.uid);
             dispatcher.emit("onUserLogin", {uid: req.uid, battleId: battleData.battleId});
         }
