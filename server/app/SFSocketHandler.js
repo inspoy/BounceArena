@@ -44,7 +44,7 @@ const onSocket = function (socket) {
                 const pid = reqObj.pid;
                 const uid = reqObj.uid;
                 if (pid != 0) {
-                    logInfo("request: " + req, 1);
+                    logInfo(`request from ${uid}: ` + req, 3);
                 }
                 // 防止重复登录
                 let check = true;
@@ -62,7 +62,7 @@ const onSocket = function (socket) {
                 }
                 else {
                     logInfo("重复登陆：" + uid);
-                    socket.write(`{"pid":1,"retCode":${commonConf.errCode.duplicatedLogin}\r\n\r\n`);
+                    socket.write(`{"pid":1,"retCode":${commonConf.errCode.duplicatedLogin}}\r\n\r\n`);
                 }
             }
             catch (e) {
@@ -218,7 +218,7 @@ const responseWithUid = function (uid, respJsonString) {
  */
 const main = function () {
     process.on("SIGINT", function () {
-        console.log("SocketHandler即将退出");
+        logInfo("SocketHandler即将退出");
         process.exit(0);
     });
 

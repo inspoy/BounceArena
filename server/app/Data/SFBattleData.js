@@ -11,7 +11,7 @@ class Battle {
         this.users = {};
         this.walls = [];
         this.balls = [];
-        this.reqId = 0;
+        this.runTime = 0;
     }
 
     /**
@@ -58,7 +58,8 @@ class Battle {
             topSpeed: 5,
             accX: 0,
             accY: 0,
-            accPower: 10
+            accPower: 20,
+            skillId: 0
         };
         return 0;
     }
@@ -74,15 +75,6 @@ class Battle {
         }
         delete this.users[uid];
         return 0;
-    }
-
-    /**
-     * 获取一个递增的序列ID
-     * @returns {number}
-     */
-    getReqId() {
-        this.reqId += 1;
-        return this.reqId;
     }
 }
 

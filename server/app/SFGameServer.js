@@ -104,7 +104,7 @@ const main = function () {
     battleData.battleId = SFBattleController.createBattle();
 
     process.on("SIGINT", function () {
-        console.log("GameServer即将退出");
+        logInfo("GameServer即将退出");
         process.exit(0);
     });
 

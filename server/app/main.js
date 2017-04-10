@@ -5,18 +5,43 @@
 "use strict";
 
 const child_process = require("child_process");
+const colors = require("colors");
 const commonConfig = require("./Conf/SFCommonConf");
+const utils = require("./Conf/SFUtils");
 let socketHandler = null;
 let gameServer = null;
+
+const logType_SocketHandler = 1;
+const logType_GameServer = 2;
+
+let isSocketHandlerRunning = false;
+let isGameServerRunning = false;
+
+const log = function (type, str, level) {
+    if (level <= commonConfig.logLevel) {
+        const timeNow = new Date();
+        const timeStr = timeNow.Format("yy-MM-dd hh:mm:ss:S - ");
+        let typeStr = type == logType_SocketHandler ? "[SocketHandler]".cyan : "[ Game Server ]".blue;
+        let typeStr2 = "";
+        if (level == commonConfig.logLevel_warning) {
+            typeStr2 = "[WARNING]".yellow;
+        }
+        else if (level == commonConfig.logLevel_error) {
+            typeStr2 = "[ERROR]".red;
+        }
+        else {
+            typeStr2 = "[INFO]".green;
+        }
+        console.log(timeStr + typeStr + typeStr2 + " - " + str);
+    }
+};
 
 const main = function () {
     try {
         socketHandler = child_process.fork(__dirname + "/SFSocketHandler.js");
         socketHandler.on("message", function (msg) {
             if (msg.type == "LOG") {
-                if (commonConfig.enableLog_SocketHandler && msg.level <= commonConfig.logLevel) {
-                    console.log("[SocketHandler] - " + msg.data);
-                }
+                log(logType_SocketHandler, msg.data, msg.level);
             }
             else if (msg.type == "REQ") {
                 // 转发消息
@@ -26,25 +51,24 @@ const main = function () {
             }
         });
         socketHandler.on('error', function (err) {
-            console.log('[SocketHandler]ERROR: ' + err);
+            log(logType_SocketHandler, "Process Error:\n".red + err, -2);
         });
         socketHandler.on('exit', function (code, signal) {
-            console.log('[SocketHandler]EXITED:');
-            console.log('code=' + code + ' signal=' + signal);
+            log(logType_SocketHandler, "Process Exit:\n" + ("code=" + code + " signal=" + signal), 0);
+            isSocketHandlerRunning = false;
+            onExit();
         });
+        isSocketHandlerRunning = true;
     }
     catch (e) {
-        console.log("启动SocketHandler失败:");
-        console.log(e);
+        log(logType_SocketHandler, "启动失败: " + e, -2);
     }
 
     try {
         gameServer = child_process.fork('./SFGameServer.js');
         gameServer.on('message', function (msg) {
             if (msg.type == "LOG") {
-                if (commonConfig.enableLog_GameServer && msg.level <= commonConfig.logLevel) {
-                    console.log('[ Game Server ] - ' + msg.data);
-                }
+                log(logType_GameServer, msg.data, msg.level);
             }
             else if (msg.type == "RESP") {
                 // 转发消息
@@ -54,24 +78,29 @@ const main = function () {
             }
         });
         gameServer.on('error', function (err) {
-            console.log('[ Game Server ]ERROR: ' + err);
+            log(logType_GameServer, "processError:\n".red + err, -2);
         });
         gameServer.on('exit', function (code, signal) {
-            console.log('[ Game Server ]EXITED:');
-            console.log('code=' + code + ' signal=' + signal);
+            log(logType_GameServer, "Process Exit:\n" + ("code=" + code + " signal=" + signal), 0);
+            isGameServerRunning = false;
+            onExit();
         });
+        isGameServerRunning = true;
     }
     catch (e) {
-        console.log('启动GameServer失败');
-        console.log(e);
+        log(logType_GameServer, "启动失败: " + e, -2);
     }
 
-    process.on("SIGINT", onExit);
+    process.on("SIGINT", function () {
+        console.log("\n[MAIN] - 收到信号 SIGINT, 等待退出...".magenta);
+    });
 };
 
 const onExit = function () {
-    console.log("\n[MAIN] - Received SIGINT, prepare to exit...");
-    process.exit(0);
+    if (!isSocketHandlerRunning && !isGameServerRunning) {
+        console.log("[MAIN] - 子进程均安全退出，准备关闭主进程".magenta);
+        process.exit(0);
+    }
 };
 
 main();

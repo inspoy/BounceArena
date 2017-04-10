@@ -41,11 +41,22 @@ namespace SF
         /// <summary>
         /// 服务器IP地址
         /// </summary>
+//        public string serverIp = "120.25.198.51";
         public string serverIp = "127.0.0.1";
 
         /// <summary>
         /// 服务器端口
         /// </summary>
         public int serverPort = 19621;
+
+        /// <summary>
+        /// 超过这个延迟的同步数据将会被忽略
+        /// </summary>
+        public int maxDiscardLag = 100;
+
+        /// <summary>
+        /// 实际值与参考值的差小于这个阈值就不做位置修正了
+        /// </summary>
+        public float syncPosThrehold = 0.1f;
     }
 }

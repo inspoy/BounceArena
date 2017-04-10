@@ -181,7 +181,8 @@ namespace SF
                 }
             }
             viewCode += viewPart1 + "\n" + viewPart2 + "\n\n" +
-                "    void Start()\n{\n" +
+                "    void Start()\n" +
+                "    {\n" +
                 "#if UNITY_EDITOR\n" +
                 "        var time1 = DateTime.Now;\n" +
                 "#endif\n";
@@ -195,7 +196,8 @@ namespace SF
                 "#else\n" +
                 "        SFUtils.log(\"View created: vw" + viewName + "\");\n" +
                 "#endif\n" +
-                "    }\n}\n";
+                "    }\n" +
+                "}\n";
             presenterCode += presenterPart1 + "        }\n\n" +
                 "        public void onViewRemoved()\n" +
                 "        {\n" +

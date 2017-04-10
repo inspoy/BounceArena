@@ -106,7 +106,7 @@ namespace SF
         /// <param name="paras">参数列表</param>
         static public void logWarning(string msg, params object[] paras)
         {
-            log(msg, LOG_LEVEL_WARNING, paras);
+            logLevel(LOG_LEVEL_WARNING, msg, paras);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace SF
         /// <param name="paras">参数列表</param>
         static public void logError(string msg, params object[] paras)
         {
-            log(msg, LOG_LEVEL_ERROR, paras);
+            logLevel(LOG_LEVEL_ERROR, msg, paras);
         }
 
         /// <summary>
@@ -133,11 +133,25 @@ namespace SF
             Debug.Assert(condition, msg);
         }
 
+        /// <summary>
+        /// 错误码map
+        /// </summary>
+        static Dictionary<int, string> msgMap;
+
         static public string getMsgByErrorCode(int code)
         {
-            if (code == SFErrorCode.ERR_DUPLICATED_UID)
+            if (msgMap == null)
             {
-                return "重复的UID";
+                msgMap = new Dictionary<int, string>();
+                msgMap[SFErrorCode.duplicatedLogin] = "重复的UID";
+                msgMap[SFErrorCode.battleIdNotExist] = "战场不存在";
+                msgMap[SFErrorCode.userNotLogin] = "用户未登录";
+                msgMap[SFErrorCode.userNotJoin] = "用户未加入战斗";
+                msgMap[SFErrorCode.userAlreadyJoin] = "用户已经加入了战斗";
+            }
+            if (msgMap.ContainsKey(code))
+            {
+                return msgMap[code];
             }
             return "错误码[" + code.ToString() + "]";
         }

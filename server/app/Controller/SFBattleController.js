@@ -5,6 +5,7 @@
 "use strict";
 
 const events = require("events");
+const commonConf = require("./../Conf/SFCommonConf");
 const userData = require("./../Data/SFUserData");
 const battleData = require("./../Data/SFBattleData");
 const utils = require("./../Conf/SFUtils");
@@ -20,30 +21,8 @@ let m_pusher = null;
 const onRequest = function (req) {
     if (req.pid == 3) {
         // 用户上传操作信息
-        let retCode = 0;
-        do {
-            if (!userData.onlineUserList.hasOwnProperty(req.uid)) {
-                retCode = errCode.userNotJoin;
-                break;
-            }
-            const battleId = userData.onlineUserList[req.uid].battleId;
-            if (!battleData.battleList.hasOwnProperty(battleId)) {
-                retCode = errCode.battleIdNotExist;
-                break;
-            }
-            const battle = battleData.battleList[battleId];
-            if (!battle.users.hasOwnProperty(req.uid)) {
-                retCode = errCode.userNotJoin;
-                break;
-            }
-            const userItem = battle.users[req.uid];
-            userItem.accX = req["moveX"] * userItem.accPower;
-            userItem.accY = req["moveY"] * userItem.accPower;
-            userItem.rotation = req.rotation;
-        } while (false);
-        const resp = {pid: 2, retCode: retCode};
-        m_pusher([req.uid], JSON.stringify(resp));
-    } // end of if(pid == 3)
+        onUserSyncInfo(req);
+    }
 };
 
 /**
@@ -56,6 +35,37 @@ const createBattle = function () {
     battleData.battleList[battle.battleId] = battle;
     logInfo("创建了一场新的战斗: " + battle.battleId);
     return battle.battleId;
+};
+
+/**
+ * 用户同步操作信息
+ * @param req
+ */
+const onUserSyncInfo = function (req) {
+    let retCode = 0;
+    do {
+        if (!userData.onlineUserList.hasOwnProperty(req.uid)) {
+            retCode = errCode.userNotJoin;
+            break;
+        }
+        const battleId = userData.onlineUserList[req.uid].battleId;
+        if (!battleData.battleList.hasOwnProperty(battleId)) {
+            retCode = errCode.battleIdNotExist;
+            break;
+        }
+        const battle = battleData.battleList[battleId];
+        if (!battle.users.hasOwnProperty(req.uid)) {
+            retCode = errCode.userNotJoin;
+            break;
+        }
+        const userItem = battle.users[req.uid];
+        userItem.accX = req["moveX"] * userItem.accPower;
+        userItem.accY = req["moveY"] * userItem.accPower;
+        userItem.rotation = req["rotation"];
+        userItem.skillId = req["skillId"];
+    } while (false);
+    const resp = {pid: 3, retCode: retCode};
+    m_pusher([req.uid], JSON.stringify(resp));
 };
 
 /**
@@ -72,6 +82,7 @@ const onUpdate = function () {
              * @see battleData.Battle
              */
             const battle = battleList[battleId];
+            battle.runTime += 40;
             // 更新坐标
             for (const uid in battle.users) {
                 if (battle.users.hasOwnProperty(uid)) {
@@ -88,11 +99,28 @@ const onUpdate = function () {
                         // 如果当前没有移动，速度均匀衰减
                         userItem.speedX *= 0.9;
                         userItem.speedY *= 0.9;
+                        if (Math.abs(userItem.speedX) < 0.01) {
+                            userItem.speedX = 0;
+                        }
+                        if (Math.abs(userItem.speedY) < 0.01) {
+                            userItem.speedY = 0;
+                        }
                     }
                 }
             }
 
             // TODO: 更新碰撞
+
+            // TODO: 更新释放技能
+            for (const uid in battle.users) {
+                if (battle.users.hasOwnProperty(uid)) {
+                    const userItem = battle.users[uid];
+                    if (userItem.skillId != 0) {
+                        logInfo(`角色${userItem.uid}释放了技能${userItem.skillId}`);
+                        userItem.skillId = 0;
+                    }
+                }
+            }
 
             // TODO: 更新火球...
 
@@ -117,7 +145,7 @@ const onUpdate = function () {
             const resp = {
                 pid: 4,
                 retCode: 0,
-                reqId: battle.getReqId(),
+                runTime: battle.runTime,
                 infos: infos
             };
             if (users.length > 0) {
@@ -133,7 +161,6 @@ const onUpdate = function () {
 const onUserLogin = function (data) {
     const uid = data.uid;
     const battleId = data.battleId;
-    let ok = false;
     let retCode = 0;
     if (battleData.battleList.hasOwnProperty(battleId)) {
         logInfo(`用户"${uid}"加入了战场${battleId}`);
@@ -148,33 +175,34 @@ const onUserLogin = function (data) {
                     pid: 2,
                     retCode: retCode,
                     mapId: battle.mapId,
+                    runTime: battle.runTime,
                     users: battle.getUserList(uid),
                     posX: posX,
                     posY: posY,
                     rotation: 0
                 };
                 m_pusher([uid], JSON.stringify(resp));
-                ok = true;
             }
             else {
-                logInfo("加入战场失败");
+                logInfo("加入战场失败", commonConf.logLevel_warning);
                 // retCode = userAlreadyJoin;
             }
         }
         else {
-            logInfo("用户未登录:" + uid);
+            logInfo("用户未登录:" + uid, commonConf.logLevel_warning);
             retCode = errCode.userNotLogin;
         }
     }
     else {
-        logInfo("不存在的battleId:" + battleId);
+        logInfo("不存在的battleId:" + battleId, commonConf.logLevel_warning);
         retCode = errCode.battleIdNotExist;
     }
-    if (!ok) {
+    if (retCode != 0) {
         const resp = {
             pid: 2,
             retCode: retCode,
             mapId: 0,
+            runTime: 0,
             users: [],
             posX: 0,
             posY: 0,
@@ -201,7 +229,7 @@ const onUserLogout = function (data) {
  * @returns {number} 修正值，乘以修正前的速度即可获得修正后的速度
  */
 const calcSpeedLimit = function (speedX, speedY, topSpeed) {
-    const curSpeed = speedX * speedX + speedY * speedY; // squared speed
+    const curSpeed = speedX * speedX + speedY * speedY; // squared
     if (curSpeed < topSpeed * topSpeed) {
         return 1;
     }

@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/inspoy/BounceArena/issues"
   },
-  "homepage": "https://github.com/inspoy/BounceArena#readme"
+  "homepage": "https://github.com/inspoy/BounceArena#readme",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "redis": "^2.7.1"
+  }
 }
