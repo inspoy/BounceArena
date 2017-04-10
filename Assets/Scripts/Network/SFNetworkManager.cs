@@ -82,11 +82,11 @@ namespace SF
                     }
                     dispatcher.dispatchEvent(SFEvent.EVENT_NETWORK_READY, new SFSimpleEventData(ret));
                 });
-            m_client.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_INTERRUPTED, e =>
+            m_client.dispatcher.addEventListener(this, SFEvent.EVENT_NETWORK_INTERRUPTED, e =>
                 {
                     dispatcher.dispatchEvent(e);
                 });
-            dispatcher.addEventListener(SFResponseMsgSocketHeartbeat.pName, onHeartbeat);
+            dispatcher.addEventListener(this, SFResponseMsgSocketHeartbeat.pName, onHeartbeat);
         }
 
         public void uninit()
@@ -144,7 +144,7 @@ namespace SF
                 SFBaseRequestMessage req = m_sendQueue.Dequeue();
                 string data = JsonUtility.ToJson(req);
                 m_client.sendData(data);
-                if (req.pid != 0)
+                if (req.pid != 0 && req.pid != 3)
                 {
                     SFUtils.log("Sending message[{0}]: {1}", data.Length, data);
                 }
@@ -165,7 +165,7 @@ namespace SF
                 if (obj != null)
                 {
                     handleProtocol(obj.pid, data);
-                    if (obj.pid != 0)
+                    if (obj.pid != 0 && obj.pid != 3 && obj.pid != 4)
                     {
                         SFUtils.log("收到信息:协议号={0}\ndata={1}", obj.pid, data);
                     }

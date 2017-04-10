@@ -1,5 +1,5 @@
 /**
- * Created on 2017/04/05 by inspoy
+ * Created on 2017/04/10 by inspoy
  * All rights reserved.
  */
 
@@ -22,7 +22,7 @@ public class SFLoginView : SFBaseView
 
 
     void Start()
-{
+    {
 #if UNITY_EDITOR
         var time1 = DateTime.Now;
 #endif

@@ -61,7 +61,7 @@ namespace SF
             }
             m_infoMsg = "正在连接服务器";
             m_mgr.init();
-            m_mgr.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_READY, result =>
+            m_mgr.dispatcher.addEventListener(this, SFEvent.EVENT_NETWORK_READY, result =>
                 {
                     SFSimpleEventData retCode = result.data as SFSimpleEventData;
                     if (retCode.intVal == 0)
@@ -73,8 +73,8 @@ namespace SF
                         m_infoMsg = "服务器连接失败";
                     }
                 });
-            m_mgr.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_INTERRUPTED, onInterrupt);
-            m_mgr.dispatcher.addEventListener(SFResponseMsgUnitLogin.pName, onRecvMsg);
+            m_mgr.dispatcher.addEventListener(this, SFEvent.EVENT_NETWORK_INTERRUPTED, onInterrupt);
+            m_mgr.dispatcher.addEventListener(this, SFResponseMsgUnitLogin.pName, onRecvMsg);
         }
 
         void onDisconnect(SFEvent e)

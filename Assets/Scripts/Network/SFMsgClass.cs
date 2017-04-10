@@ -119,6 +119,11 @@ namespace SF
         public int mapId;
 
         /// <summary>
+        /// 加入战斗时地图已经运行的时间
+        /// </summary>
+        public int runTime;
+
+        /// <summary>
         /// 其他玩家的信息
         /// </summary>
         public List<SFMsgDataRemoteUserInfo> users;
@@ -183,7 +188,11 @@ namespace SF
         {
             pid = 4;
         }
-        public int reqId;
+
+        /// <summary>
+        /// 单位毫秒
+        /// </summary>
+        public int runTime;
         public List<SFMsgDataUserSyncInfo> infos;
     };
     #endregion

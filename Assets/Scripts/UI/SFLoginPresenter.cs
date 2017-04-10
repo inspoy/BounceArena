@@ -34,6 +34,7 @@ namespace SF
 
         public void onViewRemoved()
         {
+            SFNetworkManager.instance.dispatcher.removeAllEventListenersWithTarget(this);
         }
 
         void onLogin(SFEvent e)
@@ -49,14 +50,14 @@ namespace SF
             m_view.btnLogin.interactable = false;
             m_infoMsg = "正在连接服务器...";
             SFNetworkManager.instance.init();
-            SFNetworkManager.instance.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_READY, onConnectResult);
-            SFNetworkManager.instance.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_INTERRUPTED, result =>
+            SFNetworkManager.instance.dispatcher.addEventListener(this, SFEvent.EVENT_NETWORK_READY, onConnectResult);
+            SFNetworkManager.instance.dispatcher.addEventListener(this, SFEvent.EVENT_NETWORK_INTERRUPTED, result =>
                 {
                     m_infoMsg = "网络连接中断";
                     m_willReset = true;
                 });
-            SFNetworkManager.instance.dispatcher.addEventListener(SFResponseMsgUnitLogin.pName, onLoginResult);
-            SFNetworkManager.instance.dispatcher.addEventListener(SFResponseMsgNotifyRemoteUsers.pName, onRemoteUsers);
+            SFNetworkManager.instance.dispatcher.addEventListener(this, SFResponseMsgUnitLogin.pName, onLoginResult);
+            SFNetworkManager.instance.dispatcher.addEventListener(this, SFResponseMsgNotifyRemoteUsers.pName, onRemoteUsers);
         }
 
         void onConnectResult(SFEvent e)
@@ -134,6 +135,7 @@ namespace SF
                 SFBattleData.instance.enterBattle_posX = data.posX;
                 SFBattleData.instance.enterBattle_posY = data.posY;
                 SFBattleData.instance.enterBattle_rotation = data.rotation;
+                SFBattleData.instance.enterBattle_initRunTime = data.runTime;
 
                 SFUtils.log("玩家初始坐标:({0}, {1}),rot={2}", data.posX, data.posY, data.rotation);
             }

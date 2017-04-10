@@ -12,6 +12,7 @@ pid,2,,
 name,NotifyRemoteUsers,,
 desc,登陆时推送场上其他玩家的信息,,
 resp,int,mapId,地图ID
+resp,int,runTime,加入战斗时地图已经运行的时间
 resp,List<SFMsgDataRemoteUserInfo>,users,其他玩家的信息
 resp,float,posX,自己的初始位置X
 resp,float,posY,自己的初始位置Y
@@ -28,6 +29,6 @@ END,,,
 pid,4,,
 name,NotifyUnitStatus,,
 desc,推送其他角色的状态,,
-resp,int,reqId,
+resp,int,runTime,单位毫秒
 resp,List<SFMsgDataUserSyncInfo>,infos,
 END,,,

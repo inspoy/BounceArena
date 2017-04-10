@@ -13,22 +13,22 @@ public class SFUnitManager : MonoBehaviour
     public GameObject unitPrefab;
     Dictionary<string, SFUnitController> m_controllers;
     SFHeroController m_heroController;
-    int m_reqId;
+    int m_runTime;
 
     // Use this for initialization
     void Start()
     {
         m_heroController = GetComponent<SFHeroController>();
         m_controllers = new Dictionary<string, SFUnitController>();
-        m_reqId = 0;
+        m_runTime = 0;
 
-        SFNetworkManager.instance.dispatcher.addEventListener(SFResponseMsgNotifyUnitStatus.pName, onNotifyUnitStatus);
+        SFNetworkManager.instance.dispatcher.addEventListener(this, SFResponseMsgNotifyUnitStatus.pName, onNotifyUnitStatus);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        m_runTime += (int)(Time.deltaTime * 1000);
     }
 
     /// <summary>
@@ -36,6 +36,7 @@ public class SFUnitManager : MonoBehaviour
     /// </summary>
     public void initUnits()
     {
+        m_runTime = SFBattleData.instance.enterBattle_initRunTime;
         SFUtils.log("初始化角色...");
         // 自己
         SFUnitConf heroConf;
@@ -99,15 +100,12 @@ public class SFUnitManager : MonoBehaviour
     void onNotifyUnitStatus(SFEvent e)
     {
         var data = e.data as SFResponseMsgNotifyUnitStatus;
-        var reqId = data.reqId;
-        if (reqId < m_reqId)
-        {
-            SFUtils.logError("等等。。乱了？收到了{0}，但是已经到{1}了耶", reqId, m_reqId);
-        }
-        else
-        {
-            m_reqId = reqId;
-        }
+//        if (data.runTime < m_runTime - SFCommonConf.instance.maxDiscardLag)
+//        {
+//            // 这个信息延迟超过100ms了，抛弃掉
+//            SFUtils.logWarning("消息延迟了{0}ms, 被抛弃({1} - {2})", data.runTime - m_runTime, data.runTime, m_runTime);
+//            return;
+//        }
         var infos = data.infos;
         foreach (var item in infos)
         {

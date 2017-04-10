@@ -91,4 +91,13 @@ public class SFUIEventListener : EventTrigger
             dispatcher.dispatchEvent(SFEvent.EVENT_UI_SUBMIT);
         }
     }
+
+    void OnDestroy()
+    {
+        if (dispatcher != null)
+        {
+            dispatcher.removeAllEventListeners();
+        }
+        dispatcher = null;
+    }
 }

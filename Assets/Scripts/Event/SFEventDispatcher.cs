@@ -11,18 +11,29 @@ namespace SF
 {
 
     public delegate void SFListenerSelector(SFEvent e);
+    public class SFPairOfListenerAndSelector
+    {
+        public SFPairOfListenerAndSelector(object _listener, SFListenerSelector _selector)
+        {
+            listener = _listener;
+            selector = _selector;
+        }
+
+        public object listener;
+        public SFListenerSelector selector;
+    };
 
     /// <summary>
     /// 事件派发器
     /// </summary>
     public class SFEventDispatcher
     {
-        Dictionary<string, List<SFListenerSelector> > m_dictListeners;
+        Dictionary<string, List<SFPairOfListenerAndSelector> > m_dictListeners;
         object m_target;
 
         public SFEventDispatcher(object target)
         {
-            m_dictListeners = new Dictionary<string, List<SFListenerSelector>>();
+            m_dictListeners = new Dictionary<string, List<SFPairOfListenerAndSelector>>();
             m_target = target;
         }
 
@@ -32,22 +43,23 @@ namespace SF
         /// <param name="eventType">事件类型</param>
         /// <param name="sel">需要添加的监听</param>
         /// <returns>是否添加成功</returns>
-        public bool addEventListener(string eventType, SFListenerSelector sel)
+        public bool addEventListener(object listener, string eventType, SFListenerSelector sel)
         {
             if (eventType != "" && sel != null) // 判断有效性
             {
                 if (hasEventListener(eventType, sel))
                 {
-                    SFUtils.log(string.Format("重复监听！type={0}", eventType));
+                    SFUtils.logWarning(string.Format("重复监听！type={0}", eventType));
                 }
                 if (!m_dictListeners.ContainsKey(eventType))
                 {
                     // 不存在的话就新建一个
-                    List<SFListenerSelector> newSelectors = new List<SFListenerSelector>();
+                    List<SFPairOfListenerAndSelector> newSelectors = new List<SFPairOfListenerAndSelector>();
                     m_dictListeners[eventType] = newSelectors;
                 }
                 var selectors = m_dictListeners[eventType];
-                selectors.Add(sel);
+                var pair = new SFPairOfListenerAndSelector(listener, sel);
+                selectors.Add(pair);
                 return true;
             }
             return false;
@@ -63,11 +75,10 @@ namespace SF
         {
             if (m_dictListeners.ContainsKey(eventType))
             {
-                List<SFListenerSelector> selectors = m_dictListeners[eventType];
-                SFListenerSelector target = selectors.Find(
-                    delegate (SFListenerSelector src)
+                List<SFPairOfListenerAndSelector> selectors = m_dictListeners[eventType];
+                SFPairOfListenerAndSelector target = selectors.Find(delegate (SFPairOfListenerAndSelector src)
                     {
-                        return sel.GetHashCode() == src.GetHashCode();
+                        return sel.GetHashCode() == src.selector.GetHashCode();
                     });
                 if (target != null)
                 {
@@ -87,10 +98,38 @@ namespace SF
         {
             if (hasEventListener(eventType, sel))
             {
-                var selectors = m_dictListeners[eventType];
-                selectors.Remove(sel);
+                var pairs = m_dictListeners[eventType];
+                foreach (var pair in pairs)
+                {
+                    if (pair.selector == sel)
+                    {
+                        pairs.Remove(pair);
+                        return true;
+                    }
+                }
             }
             return false;
+        }
+
+        /// <summary>
+        /// 移除来自某对象的所有监听
+        /// </summary>
+        /// <param name="target">Target.</param>
+        public void removeAllEventListenersWithTarget(object target)
+        {
+            foreach (var item in m_dictListeners)
+            {
+                var pairs = item.Value;
+                for (int i = pairs.Count - 1; i >= 0; --i)
+                {
+                    var pair = pairs[i];
+                    if (pair.listener.GetHashCode() == target.GetHashCode())
+                    {
+                        pairs.Remove(pair);
+                    }
+                }
+            }
+            SFUtils.log("removeAllEventListenersWithTarget by " + target.ToString());
         }
 
         /// <summary>
@@ -144,7 +183,7 @@ namespace SF
                 var selectors = m_dictListeners[e.eventType];
                 foreach (var item in selectors)
                 {
-                    item(e);
+                    item.selector(e);
                     count += 1;
                 }
             }

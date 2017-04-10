@@ -45,7 +45,7 @@ public class SFBattleController : MonoBehaviour
         }
 
         // 网络断开
-        SFNetworkManager.instance.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_INTERRUPTED, onNetworkInterrupted);
+        SFNetworkManager.instance.dispatcher.addEventListener(this, SFEvent.EVENT_NETWORK_INTERRUPTED, onNetworkInterrupted);
     }
 
     // Update is called once per frame

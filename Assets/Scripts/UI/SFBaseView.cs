@@ -23,7 +23,7 @@ public class SFBaseView : MonoBehaviour
     public void addEventListener(Component widget, string eventType, SFListenerSelector sel)
     {
         var dispatcher = SFUIEventListener.getDispatcherWithGo(widget.gameObject);
-        dispatcher.addEventListener(eventType, sel);
+        dispatcher.addEventListener(this, eventType, sel);
     }
 
     /// <summary>
@@ -84,5 +84,6 @@ public class SFBaseView : MonoBehaviour
             // 意外的情况，没有清理presenter的话补调用一下
             m_presenter.onViewRemoved();
         }
+        m_presenter = null;
     }
 }
