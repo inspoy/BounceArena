@@ -170,7 +170,9 @@ const processResponse = function (jsonString) {
             else {
                 pid = respData;
             }
-            logInfo(`Responded ${pid} to ${count} user(s)`);
+            if (pid != 4) {
+                logInfo(`Responded ${pid} to ${count} user(s)`, 1);
+            }
         }
     }
     catch (e) {

@@ -18,7 +18,7 @@ public class SFUnitController : MonoBehaviour
     float m_curRotation;
 
     // 转向加速度
-    const int ROTATE_ACC = 5;
+    const int ROTATE_ACC = 10;
 
     // 位置修正加速度
     const int MOVE_ACC = 20;

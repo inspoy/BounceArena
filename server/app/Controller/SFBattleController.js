@@ -84,45 +84,38 @@ const onUpdate = function () {
             const battle = battleList[battleId];
             battle.runTime += 40;
             // 更新坐标
-            for (const uid in battle.users) {
-                if (battle.users.hasOwnProperty(uid)) {
-                    const userItem = battle.users[uid];
-                    userItem.speedX += userItem.accX * dt;
-                    userItem.speedY += userItem.accY * dt;
-                    // 限制最高速度
-                    const k = calcSpeedLimit(userItem.speedX, userItem.speedY, userItem.topSpeed);
-                    userItem.speedX *= k;
-                    userItem.speedY *= k;
-                    userItem.posX += userItem.speedX * dt;
-                    userItem.posY += userItem.speedY * dt;
-                    if (userItem.accX <= 0 && userItem.accY <= 0) {
-                        // 如果当前没有移动，速度均匀衰减
-                        userItem.speedX *= 0.9;
-                        userItem.speedY *= 0.9;
-                        if (Math.abs(userItem.speedX) < 0.01) {
-                            userItem.speedX = 0;
-                        }
-                        if (Math.abs(userItem.speedY) < 0.01) {
-                            userItem.speedY = 0;
-                        }
+            utils.traverse(battle.users, function (userItem) {
+                userItem.speedX += userItem.accX * dt;
+                userItem.speedY += userItem.accY * dt;
+                // 限制最高速度
+                const k = calcSpeedLimit(userItem.speedX, userItem.speedY, userItem.topSpeed);
+                userItem.speedX *= k;
+                userItem.speedY *= k;
+                userItem.posX += userItem.speedX * dt;
+                userItem.posY += userItem.speedY * dt;
+                if (userItem.accX <= 0 && userItem.accY <= 0) {
+                    // 如果当前没有移动，速度均匀衰减
+                    userItem.speedX *= 0.9;
+                    userItem.speedY *= 0.9;
+                    if (Math.abs(userItem.speedX) < 0.01) {
+                        userItem.speedX = 0;
+                    }
+                    if (Math.abs(userItem.speedY) < 0.01) {
+                        userItem.speedY = 0;
                     }
                 }
-            }
+            });
 
             // TODO: 更新碰撞
 
-            // TODO: 更新释放技能
-            for (const uid in battle.users) {
-                if (battle.users.hasOwnProperty(uid)) {
-                    const userItem = battle.users[uid];
-                    if (userItem.skillId != 0) {
-                        logInfo(`角色${userItem.uid}释放了技能${userItem.skillId}`);
-                        userItem.skillId = 0;
-                    }
-                }
-            }
-
             // TODO: 更新火球...
+
+            // TODO: 更新释放技能
+            utils.traverse(battle.users, function (userItem) {
+                if (userItem.skillId != 0) {
+                    logInfo(`角色${userItem.uid}释放了技能${userItem.skillId}`);
+                }
+            });
 
             // 推送数据给所有用户
             let users = [];
@@ -138,10 +131,18 @@ const onUpdate = function () {
                         rotation: userItem.rotation,
                         speedX: userItem.speedX,
                         speedY: userItem.speedY,
-                        skillId: 0
+                        skillId: userItem.skillId
                     });
                 }
             }
+
+            // 清理技能数据
+            utils.traverse(battle.users, function (userItem) {
+                if (userItem.skillId != 0) {
+                    userItem.skillId = 0;
+                }
+            });
+
             const resp = {
                 pid: 4,
                 retCode: 0,

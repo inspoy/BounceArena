@@ -21,7 +21,7 @@ module.exports = {
     enableLog_GameServer: true,
     logLevel_warning: -1,
     logLevel_error: -2,
-    logLevel: 0, // 允许最高的日志等级
+    logLevel: 1, // 允许最高的日志等级
 
     errCode: errCode,
 

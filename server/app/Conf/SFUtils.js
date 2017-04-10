@@ -31,14 +31,14 @@ exports.getRandomString = function (prefix = "", len = 16) {
 /**
  * 用指定的方法遍历对象
  * @param {object} obj
- * @param {function} callback 返回true表示中断不再继续遍历
+ * @param {function} callback 返回true表示break，返回false或不返回表示continue
  */
-exports.traverse = function(obj, callback) {
+exports.traverse = function (obj, callback) {
     if (obj && typeof(obj) == "object") {
         for (const key in obj) {
             if (obj.hasOwnProperty(key)) {
                 const item = obj[key];
-                if (callback(item)) {
+                if (callback(item, key)) {
                     return;
                 }
             }
@@ -62,16 +62,27 @@ exports.logInfo = function (msg, level = 0) {
     }
 };
 
+/**
+ * 全局事件派发器
+ * @type {events.EventEmitter}
+ */
 exports.eventDispatcher = new events.EventEmitter();
 
+/**
+ * 给Date添加Format的方法，可以给日期进行格式化
+ * @param fmt 示例：(new Date()).Format("yy-MM-dd hh:mm:ss.SSS")=>"17-4-10 17:42:48.233"
+ * @returns {*}
+ * @constructor
+ */
 Date.prototype.Format = function (fmt) {
+    const ms = this.getMilliseconds();
     const o = {
         "M+": this.getMonth() + 1, //月份
         "d+": this.getDate(), //日
         "h+": this.getHours(), //小时
         "m+": this.getMinutes(), //分
         "s+": this.getSeconds(), //秒
-        "S": this.getMilliseconds() //毫秒
+        "S": ms > 100 ? ms : (ms > 10 ? "0" + ms : "00" + ms) //毫秒
     };
     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     for (const k in o) {

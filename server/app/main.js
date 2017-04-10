@@ -20,7 +20,7 @@ let isGameServerRunning = false;
 const log = function (type, str, level) {
     if (level <= commonConfig.logLevel) {
         const timeNow = new Date();
-        const timeStr = timeNow.Format("yy-MM-dd hh:mm:ss:S - ");
+        const timeStr = timeNow.Format("yy-MM-dd hh:mm:ss.S - ");
         let typeStr = type == logType_SocketHandler ? "[SocketHandler]".cyan : "[ Game Server ]".blue;
         let typeStr2 = "";
         if (level == commonConfig.logLevel_warning) {
