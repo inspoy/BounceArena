@@ -117,6 +117,7 @@ const onUpdate = function () {
             const resp = {
                 pid: 4,
                 retCode: 0,
+                reqId: battle.getReqId(),
                 infos: infos
             };
             if (users.length > 0) {

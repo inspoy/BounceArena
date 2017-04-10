@@ -183,8 +183,9 @@ namespace SF
         {
             pid = 4;
         }
+        public int reqId;
         public List<SFMsgDataUserSyncInfo> infos;
     };
     #endregion
 }
-// Last Update: 2017/04/07
+// Last Update: 2017/04/10

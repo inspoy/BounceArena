@@ -13,12 +13,15 @@ public class SFUnitManager : MonoBehaviour
     public GameObject unitPrefab;
     Dictionary<string, SFUnitController> m_controllers;
     SFHeroController m_heroController;
+    int m_reqId;
 
     // Use this for initialization
     void Start()
     {
         m_heroController = GetComponent<SFHeroController>();
         m_controllers = new Dictionary<string, SFUnitController>();
+        m_reqId = 0;
+
         SFNetworkManager.instance.dispatcher.addEventListener(SFResponseMsgNotifyUnitStatus.pName, onNotifyUnitStatus);
     }
 
@@ -96,6 +99,15 @@ public class SFUnitManager : MonoBehaviour
     void onNotifyUnitStatus(SFEvent e)
     {
         var data = e.data as SFResponseMsgNotifyUnitStatus;
+        var reqId = data.reqId;
+        if (reqId < m_reqId)
+        {
+            SFUtils.logError("等等。。乱了？收到了{0}，但是已经到{1}了耶", reqId, m_reqId);
+        }
+        else
+        {
+            m_reqId = reqId;
+        }
         var infos = data.infos;
         foreach (var item in infos)
         {
