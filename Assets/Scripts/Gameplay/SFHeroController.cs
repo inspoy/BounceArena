@@ -29,8 +29,8 @@ public class SFHeroController : MonoBehaviour
         m_screenHeight = Screen.height;
     }
 
-    // Update is called every specific interval
-    void FixedUpdate()
+    // Update is called every frame
+    void Update()
     {
         if (m_hero == null)
         {
@@ -80,6 +80,10 @@ public class SFHeroController : MonoBehaviour
         req.moveY = m_lastMoveY;
         req.rotation = m_lastRotation;
         req.skillId = m_skillId;
+        if (m_skillId > 0)
+        {
+            SFUtils.log("释放了技能:{0}", m_skillId);
+        }
         SFNetworkManager.instance.sendMessage(req);
     }
 

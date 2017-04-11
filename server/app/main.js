@@ -32,7 +32,7 @@ const log = function (type, str, level) {
         else {
             typeStr2 = "[INFO]".green;
         }
-        console.log(timeStr + typeStr + typeStr2 + " - " + str);
+        console.log(timeStr.white + typeStr + typeStr2 + " - " + str.white);
     }
 };
 

@@ -14,6 +14,7 @@ public class SFBattleController : MonoBehaviour
     public GameObject unitContainer;
     private SFUnitManager m_unitMgr;
     private bool m_willReturn = false;
+    public static SFBattleController currentBattle = null;
     // Use this for initialization
     void Start()
     {
@@ -21,6 +22,7 @@ public class SFBattleController : MonoBehaviour
         {
             m_unitMgr = unitContainer.GetComponent<SFUnitManager>();
         }
+        SFBattleController.currentBattle = this;
 
         // 加载场景
         SFUtils.log("mapId:{0}", SFBattleData.instance.enterBattle_mapId);

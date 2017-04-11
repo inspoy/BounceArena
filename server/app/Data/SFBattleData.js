@@ -2,7 +2,8 @@
  * Created by inspoy on 2017/4/7.
  */
 
-const errCode = require("./../Conf/SFCommonConf").errCode;
+const commonConf = require("./../Conf/SFCommonConf");
+const errCode = commonConf.errCode;
 
 class Battle {
     constructor() {
@@ -10,7 +11,7 @@ class Battle {
         this.mapId = 0;
         this.users = {};
         this.walls = [];
-        this.balls = [];
+        this.balls = {};
         this.runTime = 0;
     }
 
@@ -65,6 +66,31 @@ class Battle {
     }
 
     /**
+     * 添加一个火球到场景中
+     * @param {string} ballId
+     * @param {number} posX
+     * @param {number} posY
+     * @param {number} speedX
+     * @param {number} speedY
+     * @param {number} rotation
+     */
+    addBall(ballId, posX, posY, speedX, speedY, rotation) {
+        if (this.balls.hasOwnProperty(ballId)){
+            return -1;
+        }
+        this.balls[ballId] = {
+            ballId: ballId,
+            posX: posX,
+            posY: posY,
+            speedX: speedX,
+            speedY: speedY,
+            topSpeed: 10,
+            accX: commonConf.ballAcc * Math.cos(rotation / 180 * Math.PI),
+            accY: commonConf.ballAcc * Math.sin(rotation / 180 * Math.PI),
+        };
+    }
+
+    /**
      * 移除指定的uid
      * @param uid
      */
@@ -81,5 +107,6 @@ class Battle {
 module.exports = {
     battleId: "", // TODO:临时的战斗ID，之后要改成动态创建，这个属性要删掉
     Battle: Battle,
-    battleList: {}
+    battleList: {},
+    updateCost: 0
 };

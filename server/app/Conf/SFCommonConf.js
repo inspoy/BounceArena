@@ -25,5 +25,8 @@ module.exports = {
 
     errCode: errCode,
 
+    // 游戏相关配置
+    ballAcc: 30, // 火球发射后的加速度
+
     __more__: 0
 };

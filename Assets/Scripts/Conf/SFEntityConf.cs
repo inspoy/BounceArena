@@ -22,6 +22,16 @@ namespace SF
         public float speedY;
     }
 
+    /// <summary>
+    /// 火球配置信息，用于添加一个火球到场景中
+    /// </summary>
+    public struct SFBallConf
+    {
+        public string ballId;
+        public float posX;
+        public float posY;
+    }
+
     public enum ESkill
     {
         None = 0,

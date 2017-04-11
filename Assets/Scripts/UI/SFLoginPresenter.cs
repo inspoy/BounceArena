@@ -34,7 +34,10 @@ namespace SF
 
         public void onViewRemoved()
         {
-            SFNetworkManager.instance.dispatcher.removeAllEventListenersWithTarget(this);
+            if (SFNetworkManager.instance.dispatcher != null)
+            {
+                SFNetworkManager.instance.dispatcher.removeAllEventListenersWithTarget(this);
+            }
         }
 
         void onLogin(SFEvent e)

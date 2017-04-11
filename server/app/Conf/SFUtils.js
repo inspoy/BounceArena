@@ -39,7 +39,7 @@ exports.traverse = function (obj, callback) {
             if (obj.hasOwnProperty(key)) {
                 const item = obj[key];
                 if (callback(item, key)) {
-                    return;
+                    break;
                 }
             }
         }

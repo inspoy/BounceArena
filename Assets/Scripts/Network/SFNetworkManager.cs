@@ -217,16 +217,16 @@ namespace SF
                 }
                 else // __end__
                 {
-                    SFUtils.logWarning("不能识别的协议号: {0}", 0, pid);
+                    SFUtils.logWarning("不能识别的协议号: {0}", pid);
                 }
                 if (obj != null)
                 {
                     dispatcher.dispatchEvent(pName, obj);
                 }
             }
-            catch
+            catch (Exception e)
             {
-                SFUtils.logWarning("解析协议失败: {0}\ndata: {1}", 0, pid, jsonData);
+                SFUtils.logWarning("解析协议失败: {0}\ndata: {1}\n错误信息:{2}\n出错方法:{3}", pid, jsonData, e.Message, e.StackTrace);
             }
         }
 

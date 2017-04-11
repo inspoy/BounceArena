@@ -39,7 +39,7 @@ public class SFUnitManager : MonoBehaviour
         m_runTime = SFBattleData.instance.enterBattle_initRunTime;
         SFUtils.log("初始化角色...");
         // 自己
-        SFUnitConf heroConf;
+        SFUnitConf heroConf = new SFUnitConf();
         heroConf.uid = SFUserData.instance.uid;
         heroConf.posX = SFBattleData.instance.enterBattle_posX;
         heroConf.posY = SFBattleData.instance.enterBattle_posY;
@@ -52,7 +52,7 @@ public class SFUnitManager : MonoBehaviour
         var users = SFBattleData.instance.enterBattle_remoteUsers;
         foreach (var item in users)
         {
-            SFUnitConf conf;
+            SFUnitConf conf = new SFUnitConf();
             conf.uid = item.uid;
             conf.posX = item.posX;
             conf.posY = item.posY;

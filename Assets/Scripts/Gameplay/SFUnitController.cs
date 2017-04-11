@@ -60,6 +60,11 @@ public class SFUnitController : MonoBehaviour
         m_curRotation = info.rotation;
         m_curSpeedX = info.speedX;
         m_curSpeedY = info.speedY;
+
+        if (info.skillId > 0)
+        {
+            this.skill(info.skillId, info.skillData);
+        }
     }
 
     void setPositionOfGo()
@@ -94,6 +99,28 @@ public class SFUnitController : MonoBehaviour
             Vector3 posDiff = new Vector3(m_curPosX - realPos.x, 0, m_curPosY - realPos.z);
             realPos += posDiff * Time.deltaTime * MOVE_ACC;
             transform.position = realPos;
+        }
+    }
+
+    /// <summary>
+    /// 释放技能
+    /// </summary>
+    /// <param name="skillId">技能ID</param>
+    /// <param name="skillData">技能描述信息，详见代码</param>
+    public void skill(int skillId, string skillData)
+    {
+        if (skillId == (int)ESkill.FireBall)
+        {
+            // 释放火球
+            // skillData表示火球ID，形如"ball_FGihX"的随机字符串
+            if (SFBallManager.current != null)
+            {
+                SFBallConf conf = new SFBallConf();
+                conf.ballId = skillData;
+                conf.posX = transform.position.x;
+                conf.posY = transform.position.z;
+                SFBallManager.current.addBall(conf);
+            }
         }
     }
 }

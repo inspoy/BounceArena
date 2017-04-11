@@ -32,6 +32,7 @@ namespace SF
         public float speedX;
         public float speedY;
         public int skillId;
+        public string skillData;
     };
 
 }
