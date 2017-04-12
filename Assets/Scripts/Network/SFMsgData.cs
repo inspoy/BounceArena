@@ -35,4 +35,18 @@ namespace SF
         public string skillData;
     };
 
+    /// <summary>
+    /// 火球状态同步
+    /// </summary>
+    [Serializable]
+    public struct SFMsgDataBallSyncInfo
+    {
+        public string ballId;
+        public float posX;
+        public float posY;
+        public float speedX;
+        public float speedY;
+        public bool explode;
+    };
+
 }

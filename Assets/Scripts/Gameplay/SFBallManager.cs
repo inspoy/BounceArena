@@ -43,9 +43,12 @@ public class SFBallManager : MonoBehaviour
     /// <summary>
     /// 根据服务端的消息更新火球位置信息
     /// </summary>
-    public void updateBall()
+    public void updateBall(List<SFMsgDataBallSyncInfo> balls)
     {
-        
+        foreach (var item in balls)
+        {
+            
+        }
     }
 
     /// <summary>

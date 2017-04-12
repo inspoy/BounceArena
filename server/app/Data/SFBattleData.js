@@ -10,7 +10,7 @@ class Battle {
         this.battleId = "";
         this.mapId = 0;
         this.users = {};
-        this.walls = [];
+        this.walls = {};
         this.balls = {};
         this.runTime = 0;
     }
@@ -56,11 +56,12 @@ class Battle {
             rotation: 0,
             speedX: 0,
             speedY: 0,
-            topSpeed: 5,
+            topSpeed: 5,        // 最大速度
             accX: 0,
             accY: 0,
-            accPower: 20,
-            skillId: 0
+            accPower: 20,       // 加速度系数
+            skillId: 0,         // 角色将要释放的技能ID
+            size: 1,            // 角色尺寸，碰撞检测时使用，半径
         };
         return 0;
     }
@@ -87,6 +88,8 @@ class Battle {
             topSpeed: 10,
             accX: commonConf.ballAcc * Math.cos(rotation / 180 * Math.PI),
             accY: commonConf.ballAcc * Math.sin(rotation / 180 * Math.PI),
+            size: 1,  // 球的尺寸，碰撞检测时使用
+            explode: false, // 是否爆炸了
         };
     }
 

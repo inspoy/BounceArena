@@ -118,5 +118,11 @@ public class SFUnitManager : MonoBehaviour
                 }
             }
         }
+
+        var balls = data.balls;
+        if (SFBallManager.current != null)
+        {
+            SFBallManager.current.updateBall(balls);
+        }
     }
 }

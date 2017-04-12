@@ -176,9 +176,9 @@ namespace SF
     };
     #endregion
 
-    #region 4-推送其他角色的状态
+    #region 4-推送角色和火球的状态
     /// <summary>
-    /// [Resp][Notify]推送其他角色的状态
+    /// [Resp][Notify]推送角色和火球的状态
     /// </summary>
     [Serializable]
     public class SFResponseMsgNotifyUnitStatus : SFBaseResponseMessage
@@ -194,7 +194,8 @@ namespace SF
         /// </summary>
         public int runTime;
         public List<SFMsgDataUserSyncInfo> infos;
+        public List<SFMsgDataBallSyncInfo> balls;
     };
     #endregion
 }
-// Last Update: 2017/04/11
+// Last Update: 2017/04/12

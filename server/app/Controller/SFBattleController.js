@@ -32,36 +32,44 @@ const onRequest = function (req) {
 const createBattle = function () {
     const battle = new battleData.Battle();
     battle.battleId = utils.getRandomString("battle_", 5);
-    battle.walls = [
-        {
+    battle.walls = {
+        wall1: {
+            wallId: "wall1",
             posX: 0,
-            posY: -15,
+            posY: -15.5,
             length: 32,
+            width: 1,
             normalX: 0,
             normalY: 1
         },
-        {
-            posX: -15,
+        wall2: {
+            wallId: "wall2",
+            posX: -15.5,
             posY: 0,
             length: 32,
+            width: 1,
             normalX: 1,
             normalY: 0
         },
-        {
+        wall3: {
+            wallId: "wall3",
             posX: 0,
-            posY: 15,
+            posY: 15.5,
             length: 32,
+            width: 1,
             normalX: 0,
             normalY: -1
         },
-        {
-            posX: 15,
+        wall4: {
+            wallId: "wall4",
+            posX: 15.5,
             posY: 0,
             length: 32,
+            width: 1,
             normalX: -1,
             normalY: 0
         }
-    ]; // TODO: 临时先弄4面墙，之后再改成配置
+    }; // TODO: 临时先弄4面墙，之后再改成配置
     battleData.battleList[battle.battleId] = battle;
     logInfo("创建了一场新的战斗: " + battle.battleId);
     return battle.battleId;
@@ -138,13 +146,6 @@ const onUpdate = function () {
                     }
                 });
 
-                // 更新角色碰撞
-                utils.traverse(battle.users, function (userItem) {
-                    utils.traverse(battle.walls, function (wallItem) {
-                        // todo
-                    });
-                });
-
                 // 更新释放技能
                 utils.traverse(battle.users, function (userItem) {
                     if (userItem.skillId != 0) {
@@ -165,7 +166,7 @@ const onUpdate = function () {
                 });
 
                 // 更新火球移动
-                utils.traverse(battle.balls, function (ballItem, ballId) {
+                utils.traverse(battle.balls, function (ballItem) {
                     ballItem.speedX += ballItem.accX * dt;
                     ballItem.speedY += ballItem.accY * dt;
                     const k = calcSpeedLimit(ballItem.speedX, ballItem.speedY, ballItem.topSpeed);
@@ -178,47 +179,105 @@ const onUpdate = function () {
                     ballItem.posY += ballItem.speedY * dt;
                 });
 
-                // TODO: 更新火球碰撞
+                // 计算碰撞
+                const colliders = {};
+                Object.assign(colliders, battle.users, battle.walls, battle.balls);
+                utils.traverse(colliders, function (item1) {
+                    let id1 = "";
+                    let type1 = "";
+                    if (item1.hasOwnProperty("uid")) {
+                        id1 = item1.uid;
+                        type1 = "user";
+                    }
+                    else if (item1.hasOwnProperty("ballId")) {
+                        id1 = item1.ballId;
+                        type1 = "ball";
+                    }
+                    else if (item1.hasOwnProperty("wallId")) {
+                        id1 = item1.wallId;
+                        type1 = "wall";
+                    }
+                    if (id1 == "") {
+                        return;
+                    }
+                    utils.traverse(colliders, function (item2) {
+                        let id2 = "";
+                        let type2 = "";
+                        if (item2.hasOwnProperty("uid")) {
+                            id2 = item2.uid;
+                            type2 = "user";
+                        }
+                        else if (item2.hasOwnProperty("ballId")) {
+                            id2 = item2.ballId;
+                            type2 = "ball";
+                        }
+                        else if (item2.hasOwnProperty("wallId")) {
+                            id2 = item2.wallId;
+                            type2 = "wall";
+                        }
+                        if (id2 == "") {
+                            return;
+                        }
+                        if (type1 == type2 && id1 >= id2) {
+                            return;
+                        }
+                        checkCollision(item1, type1, item2, type2);
+                    });
+                });
 
-                // TODO: 推送事件，如火球爆炸等
-
-                // 推送数据给所有用户
+                // 推送数据
                 let users = [];
                 let infos = [];
-                for (const uid in battle.users) {
-                    if (battle.users.hasOwnProperty(uid)) {
-                        const userItem = battle.users[uid];
-                        users.push(uid);
-                        infos.push({
-                            uid: userItem.uid,
-                            posX: userItem.posX,
-                            posY: userItem.posY,
-                            rotation: userItem.rotation,
-                            speedX: userItem.speedX,
-                            speedY: userItem.speedY,
-                            skillId: userItem.skillId,
-                            skillData: userItem.skillData
-                        });
-                    }
-                }
-
-                // 清理技能数据
+                let ballsInfo = [];
+                utils.traverse(battle.balls, function (ballItem) {
+                    ballsInfo.push({
+                        ballId: ballItem.ballId,
+                        posX: ballItem.posX,
+                        posY: ballItem.posY,
+                        speedX: ballItem.speedX,
+                        speedY: ballItem.speedY,
+                        explode: ballItem.explode
+                    });
+                });
                 utils.traverse(battle.users, function (userItem) {
-                    if (userItem.skillId != 0) {
-                        userItem.skillId = 0;
-                        userItem.skillData = "";
-                    }
+                    users.push(userItem.uid);
+                    infos.push({
+                        uid: userItem.uid,
+                        posX: userItem.posX,
+                        posY: userItem.posY,
+                        rotation: userItem.rotation,
+                        speedX: userItem.speedX,
+                        speedY: userItem.speedY,
+                        skillId: userItem.skillId,
+                        skillData: userItem.skillData
+                    });
                 });
 
                 const resp = {
                     pid: 4,
                     retCode: 0,
                     runTime: battle.runTime,
-                    infos: infos
+                    infos: infos,
+                    balls: ballsInfo
                 };
                 if (users.length > 0) {
                     m_pusher(users, JSON.stringify(resp));
                 }
+
+                // 清理状态数据
+                // 清理技能释放状态
+                utils.traverse(battle.users, function (userItem) {
+                    if (userItem.skillId != 0) {
+                        userItem.skillId = 0;
+                        userItem.skillData = "";
+                    }
+                });
+                // 清理爆炸了的火球
+                utils.traverse(battle.balls, function (ballItem) {
+                    if (ballItem.explode == true) {
+                        delete battle.balls[ballItem.ballId];
+                    }
+                });
             })(battle);
         }
     }
@@ -314,6 +373,81 @@ const calcSpeedLimit = function (speedX, speedY, topSpeed) {
     else {
         return topSpeed * topSpeed / curSpeed;
     }
+};
+
+/**
+ * 进行碰撞检测和处理
+ * @param {object} item1
+ * @param {string} type1
+ * @param {object} item2
+ * @param {string} type2
+ */
+const checkCollision = function (item1, type1, item2, type2) {
+    if (type1 == "user") {
+        if (type2 == "user") {
+            // 角色和角色
+        }
+        else if (type2 == "wall") {
+            // 角色和墙
+        }
+        else if (type2 == "ball") {
+            // 角色和球
+        }
+    }
+    else if (type1 == "ball") {
+        if (type2 == "user") {
+            // 球和角色
+        }
+        else if (type2 == "wall") {
+            // 球和墙
+        }
+        else if (type2 == "ball") {
+            // 球和球
+        }
+    }
+    // 墙因为是静态的所以不会主动和其他物体发生碰撞
+};
+
+const onUserEnterWall = function (user, wall) {
+    // 墙壁法线方向的速度归零 R'=I-(IN)N
+    const NX = item2.normalX;
+    const NY = item2.normalY;
+    const IX = item1.speedX;
+    const IY = item1.speedY;
+    const INDot = utils.vector2Dot(IX, IY, NX, NY);
+    const RX = IX - INDot * NX;
+    const RY = IY - INDot * NY;
+    item1.speedX = RX;
+    item1.speedY = RY;
+    // 修正边界
+    const threhold = item2.width / 2 + item1.size;
+    const PX = item1.posX = item2.posX;
+    const PY = item1.posY = item2.posY;
+    const PNDot = utils.vector2Dot(PX, PY, NX, NY);
+    const PPX = PNDot * NX;
+    const PPY = PNDot * NY;
+
+    /*
+     Vector3 N = wall.getNormal();
+     Vector3 I = m_curSpeed;
+     Vector3 R = I - Vector3.Dot(I, N) * N;
+     float threhold = wall.transform.localScale.z / 2 + m_bodySize;
+     // R是反弹方向
+     m_curSpeed = R;
+     // 判断边界
+     // transform.position 在 wall 的法线方向上的投影应当大于等于 wall.transform.localScale.z/2
+     // P'=(PN)N
+     Vector3 P = transform.position - wall.transform.position;
+     Vector3 pp = Vector3.Dot(P, N) * N;
+     // pp是N上的投影，OP'
+     if (Vector3.Dot(pp, N) < 0 || pp.sqrMagnitude < threhold)
+     {
+     // unit在wall里面，应该修正坐标
+     Vector3 OA = threhold * N;
+     Vector3 OB = P + OA - pp;
+     transform.position = wall.transform.position + OB;
+     }
+     */
 };
 
 dispatcher.addListener("onUserLogin", onUserLogin);

@@ -95,3 +95,66 @@ Date.prototype.Format = function (fmt) {
     }
     return fmt;
 };
+
+/**
+ * 计算距离，4个参数是两点之间距离，6个参数是点到直线距离
+ * @returns {number}
+ */
+exports.getDistance = function () {
+    if (arguments.length == 4) {
+        return exports.getDistance1(
+            arguments[0],
+            arguments[1],
+            arguments[2],
+            arguments[3]
+        );
+    }
+    if (arguments.length == 6) {
+        return exports.getDistance2(
+            arguments[0],
+            arguments[1],
+            arguments[2],
+            arguments[3],
+            arguments[4],
+            arguments[5],
+            arguments[6]
+        );
+    }
+    return 0;
+};
+
+/**
+ * 两点之间的距离，平方后
+ * @param posX1
+ * @param posY1
+ * @param posX2
+ * @param posY2
+ */
+exports.getDistance1 = function (posX1, posY1, posX2, posY2) {
+    return (posX1 - posX2) * (posX1 - posX2) + (posY1 - posY2) * (posY1 - posY2);
+};
+
+/**
+ * 点到直线的距离
+ * @param posX1
+ * @param posY1
+ * @param posX2
+ * @param posY2
+ * @param normalX
+ * @param normalY
+ */
+exports.getDistance2 = function (posX1, posY1, posX2, posY2, normalX, normalY) {
+
+};
+
+/**
+ * 计算向量点积
+ * @param x1
+ * @param y1
+ * @param x2
+ * @param y2
+ * @returns {number}
+ */
+exports.vector2Dot = function (x1, y1, x2, y2) {
+    return x1 * x2 + y1 * y2;
+};
