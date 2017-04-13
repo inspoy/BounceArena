@@ -221,7 +221,7 @@ const onUpdate = function () {
                         if (type1 == type2 && id1 >= id2) {
                             return;
                         }
-                        checkCollision(item1, type1, item2, type2);
+                        checkCollision(battle, item1, id1, type1, item2, id2, type2);
                     });
                 });
 
@@ -287,7 +287,7 @@ const onUpdate = function () {
         logInfo(`BattleController.update()耗时过多: ${costTime}ms`, -1);
     }
     if (costTime > 1) {
-        logInfo("costTime of update(): " + costTime, 3)
+        logInfo("costTime of update(): " + costTime, 3);
     }
     battleData.updateCost = costTime;
 };
@@ -377,12 +377,15 @@ const calcSpeedLimit = function (speedX, speedY, topSpeed) {
 
 /**
  * 进行碰撞检测和处理
+ * @param {object} battle
  * @param {object} item1
+ * @param {string} id1
  * @param {string} type1
  * @param {object} item2
+ * @param {string} id2
  * @param {string} type2
  */
-const checkCollision = function (item1, type1, item2, type2) {
+const checkCollision = function (battle, item1, id1, type1, item2, id2, type2) {
     if (type1 == "user") {
         if (type2 == "user") {
             // 角色和角色
