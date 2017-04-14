@@ -93,7 +93,7 @@ public class SFUnitController : MonoBehaviour
 
         // 位置如果差距不大则不改变，较大差距快速缓动
         float distance = Vector3.Distance(gameObject.transform.position, new Vector3(m_curPosX, 0, m_curPosY));
-        if (distance > SFCommonConf.instance.syncPosThrehold)
+        if (distance > SFCommonConf.instance.syncPosThreshold)
         {
             Vector3 realPos = gameObject.transform.position;
             Vector3 posDiff = new Vector3(m_curPosX - realPos.x, 0, m_curPosY - realPos.z);
@@ -122,5 +122,10 @@ public class SFUnitController : MonoBehaviour
                 SFBallManager.current.addBall(conf);
             }
         }
+    }
+
+    public void destroy()
+    {
+        GameObject.Destroy(gameObject);
     }
 }

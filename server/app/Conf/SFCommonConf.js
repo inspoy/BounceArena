@@ -27,6 +27,8 @@ module.exports = {
 
     // 游戏相关配置
     ballAcc: 30, // 火球发射后的加速度
+    ballLife: 5, // 火球寿命
+    ballInvincibleTime: 0.5, // 无敌时间
 
     __more__: 0
 };

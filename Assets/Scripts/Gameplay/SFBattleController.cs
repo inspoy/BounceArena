@@ -12,7 +12,7 @@ using SF;
 public class SFBattleController : MonoBehaviour
 {
     public GameObject unitContainer;
-    private SFUnitManager m_unitMgr;
+    public SFUnitManager unitMgr;
     private bool m_willReturn = false;
     public static SFBattleController currentBattle = null;
     // Use this for initialization
@@ -20,7 +20,7 @@ public class SFBattleController : MonoBehaviour
     {
         if (unitContainer)
         {
-            m_unitMgr = unitContainer.GetComponent<SFUnitManager>();
+            unitMgr = unitContainer.GetComponent<SFUnitManager>();
         }
         SFBattleController.currentBattle = this;
 
@@ -41,9 +41,9 @@ public class SFBattleController : MonoBehaviour
         SFSceneManager.addView("vwHUD");
 
         // 加载角色
-        if (m_unitMgr)
+        if (unitMgr)
         {
-            m_unitMgr.initUnits();
+            unitMgr.initUnits();
         }
 
         // 网络断开

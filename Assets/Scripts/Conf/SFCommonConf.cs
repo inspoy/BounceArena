@@ -57,6 +57,6 @@ namespace SF
         /// <summary>
         /// 实际值与参考值的差小于这个阈值就不做位置修正了
         /// </summary>
-        public float syncPosThrehold = 0.1f;
+        public float syncPosThreshold = 0.1f;
     }
 }

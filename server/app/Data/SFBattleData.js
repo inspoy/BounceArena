@@ -57,11 +57,13 @@ class Battle {
             speedX: 0,
             speedY: 0,
             topSpeed: 5,        // 最大速度
+            mass: 1,           // 质量，决定碰撞效果
             accX: 0,
             accY: 0,
             accPower: 20,       // 加速度系数
             skillId: 0,         // 角色将要释放的技能ID
             size: 1,            // 角色尺寸，碰撞检测时使用，半径
+            life: 50,
         };
         return 0;
     }
@@ -86,9 +88,12 @@ class Battle {
             speedX: speedX,
             speedY: speedY,
             topSpeed: 10,
-            accX: commonConf.ballAcc * Math.cos(rotation / 180 * Math.PI),
-            accY: commonConf.ballAcc * Math.sin(rotation / 180 * Math.PI),
+            accX: commonConf.ballAcc * Math.sin(rotation / 180 * Math.PI),
+            accY: commonConf.ballAcc * Math.cos(rotation / 180 * Math.PI),
             size: 1,  // 球的尺寸，碰撞检测时使用
+            power: 10, // 球威力，决定伤害和被炸飞角色的速度
+            life: commonConf.ballLife,
+            invincibleTime: commonConf.ballInvincibleTime,
             explode: false, // 是否爆炸了
         };
     }

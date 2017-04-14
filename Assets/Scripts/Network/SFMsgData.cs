@@ -31,6 +31,7 @@ namespace SF
         public float rotation;
         public float speedX;
         public float speedY;
+        public int life;
         public int skillId;
         public string skillData;
     };

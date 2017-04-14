@@ -197,5 +197,25 @@ namespace SF
         public List<SFMsgDataBallSyncInfo> balls;
     };
     #endregion
+
+    #region 5-有新玩家加入时推送
+    /// <summary>
+    /// [Resp][Notify]有新玩家加入时推送
+    /// </summary>
+    [Serializable]
+    public class SFResponseMsgNotifyNewUserJoin : SFBaseResponseMessage
+    {
+        public const string pName = "socket_5";
+        public SFResponseMsgNotifyNewUserJoin()
+        {
+            pid = 5;
+        }
+        public bool inOrOut;
+        public string uid;
+        public float posX;
+        public float posY;
+        public float rotaion;
+    };
+    #endregion
 }
-// Last Update: 2017/04/12
+// Last Update: 2017/04/14

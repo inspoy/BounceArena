@@ -47,7 +47,17 @@ public class SFBallManager : MonoBehaviour
     {
         foreach (var item in balls)
         {
-            // TODO: 火球同步
+            if (m_balls.ContainsKey(item.ballId))
+            {
+                if (item.explode)
+                {
+                    removeBall(item.ballId);
+                }
+                else
+                {
+                    m_balls[item.ballId].onSync(item);
+                }
+            }
         }
     }
 
@@ -58,6 +68,10 @@ public class SFBallManager : MonoBehaviour
     /// <param name="explode">是否播放爆炸动画, 默认为<c>true</c></param>
     public void removeBall(string ballId, bool explode = true)
     {
-        
+        if (m_balls.ContainsKey(ballId))
+        {
+            m_balls[ballId].destroy(explode);
+            m_balls.Remove(ballId);
+        }
     }
 }

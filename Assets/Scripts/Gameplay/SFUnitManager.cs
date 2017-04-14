@@ -23,6 +23,7 @@ public class SFUnitManager : MonoBehaviour
         m_runTime = 0;
 
         SFNetworkManager.instance.dispatcher.addEventListener(this, SFResponseMsgNotifyUnitStatus.pName, onNotifyUnitStatus);
+        SFNetworkManager.instance.dispatcher.addEventListener(this, SFResponseMsgNotifyNewUserJoin.pName, onNotifyUnitJoin);
     }
 
     // Update is called once per frame
@@ -94,6 +95,13 @@ public class SFUnitManager : MonoBehaviour
     /// <param name="uid">角色uid</param>
     public bool removeUnit(string uid)
     {
+        if (m_controllers.ContainsKey(uid))
+        {
+            var unit = m_controllers[uid];
+            unit.destroy();
+            m_controllers.Remove(uid);
+            return true;
+        }
         return false;
     }
 
@@ -123,6 +131,24 @@ public class SFUnitManager : MonoBehaviour
         if (SFBallManager.current != null)
         {
             SFBallManager.current.updateBall(balls);
+        }
+    }
+
+    void onNotifyUnitJoin(SFEvent e)
+    {
+        var data = e.data as SFResponseMsgNotifyNewUserJoin;
+        if (data.inOrOut)
+        {
+            SFUnitConf conf = new SFUnitConf();
+            conf.uid = data.uid;
+            conf.posX = data.posX;
+            conf.posY = data.posY;
+            conf.rotation = data.rotaion;
+            addUnit(conf);
+        }
+        else
+        {
+            removeUnit(data.uid);
         }
     }
 }
