@@ -129,7 +129,11 @@ namespace SF
             foreach (RectTransform trans in prefab.GetComponentsInChildren<RectTransform>())
             {
                 var GO = trans.gameObject;
-                string prefix = GO.name.Substring(0, 3);
+                string prefix = GO.name;
+                if (prefix.Length > 3)
+                {
+                    prefix = prefix.Substring(0, 3);
+                }
                 if (prefix == "lbl")
                 {
                     // Text
@@ -137,10 +141,10 @@ namespace SF
                     viewPart2 += "    private Text m_" + GO.name + ";\n";
                     viewPart3 +=
                         "        GameObject " + GO.name + "GO = SFUtils.findChildWithParent(gameObject, \"" + GO.name + "\");\n" +
-                        "        if (" + GO.name + "GO != null)\n" +
-                        "        {\n" +
-                        "            m_" + GO.name + " = " + GO.name + "GO.GetComponent<Text>();\n" +
-                        "        }\n\n";
+                    "        if (" + GO.name + "GO != null)\n" +
+                    "        {\n" +
+                    "            m_" + GO.name + " = " + GO.name + "GO.GetComponent<Text>();\n" +
+                    "        }\n\n";
                 }
                 else if (prefix == "btn")
                 {
@@ -149,15 +153,15 @@ namespace SF
                     viewPart2 += "    private Button m_" + GO.name + ";\n";
                     viewPart3 +=
                         "        GameObject " + GO.name + "GO = SFUtils.findChildWithParent(gameObject, \"" + GO.name + "\");\n" +
-                        "        if (" + GO.name + "GO != null)\n" +
-                        "        {\n" +
-                        "            m_" + GO.name + " = " + GO.name + "GO.GetComponent<Button>();\n" +
-                        "        }\n\n";
+                    "        if (" + GO.name + "GO != null)\n" +
+                    "        {\n" +
+                    "            m_" + GO.name + " = " + GO.name + "GO.GetComponent<Button>();\n" +
+                    "        }\n\n";
                     presenterPart1 += "            m_view.addEventListener(m_view." + GO.name + ", SFEvent.EVENT_UI_CLICK, on" + GO.name.Substring(3) + ");\n";
                     presenterPart2 += "\n" +
-                        "        void on" + GO.name.Substring(3) + "(SFEvent e)\n" +
-                        "        {\n" +
-                        "        }\n";
+                    "        void on" + GO.name.Substring(3) + "(SFEvent e)\n" +
+                    "        {\n" +
+                    "        }\n";
                 }
                 else if (prefix == "tgb")
                 {
@@ -174,9 +178,33 @@ namespace SF
                     viewPart2 += "    private InputField m_" + GO.name + ";\n";
                     viewPart3 +=
                         "        GameObject " + GO.name + "GO = SFUtils.findChildWithParent(gameObject, \"" + GO.name + "\");\n" +
+                    "        if (" + GO.name + "GO != null)\n" +
+                    "        {\n" +
+                    "            m_" + GO.name + " = " + GO.name + "GO.GetComponent<InputField>();\n" +
+                    "        }\n\n";
+                }
+                else if (prefix == "scr")
+                {
+                    // Scroll Rect
+                    viewPart1 += "    public ScrollRect " + GO.name + " { get { return m_" + GO.name + "; } }\n";
+                    viewPart2 += "    private ScrollRect m_" + GO.name + ";\n";
+                    viewPart3 +=
+                        "        GameObject " + GO.name + "GO = SFUtils.findChildWithParent(gameObject, \"" + GO.name + "\");\n" +
                         "        if (" + GO.name + "GO != null)\n" +
                         "        {\n" +
-                        "            m_" + GO.name + " = " + GO.name + "GO.GetComponent<InputField>();\n" +
+                        "            m_" + GO.name + " = " + GO.name + "GO.GetComponent<ScrollRect>();\n" +
+                        "        }\n\n";
+                }
+                else if (prefix == "pro")
+                {
+                    // Progress Bar
+                    viewPart1 += "    public SFProgressBar " + GO.name + " { get { return m_" + GO.name + "; } }\n";
+                    viewPart2 += "    private SFProgressBar m_" + GO.name + ";\n";
+                    viewPart3 +=
+                        "        GameObject " + GO.name + "GO = SFUtils.findChildWithParent(gameObject, \"" + GO.name + "\");\n" +
+                        "        if (" + GO.name + "GO != null)\n" +
+                        "        {\n" +
+                        "            m_" + GO.name + " = " + GO.name + "GO.GetComponent<SFProgressBar>();\n" +
                         "        }\n\n";
                 }
             }

@@ -53,6 +53,17 @@ public class SFSceneManager : MonoBehaviour
         return SFSceneManager.addView(prefab, trans, sibIdx);
     }
 
+    static public GameObject getView(string viewName)
+    {
+        var prefab = Resources.Load("Prefabs/Views/" + viewName) as GameObject;
+        if (prefab == null)
+        {
+            SFUtils.logWarning(string.Format("找不到view:{0}", viewName));
+            return null;
+        }
+        return prefab;
+    }
+
     // Use this for initialization
     void Awake()
     {

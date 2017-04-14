@@ -16,7 +16,7 @@ public class SFProgressBar : MonoBehaviour
     /// 设置进度条的值
     /// </summary>
     /// <param name="val">范围从0-1</param>
-    void setProgress(float val)
+    public void setProgress(float val)
     {
         val = Mathf.Clamp01(val);
         if (slider != null)
@@ -29,7 +29,7 @@ public class SFProgressBar : MonoBehaviour
     /// 返回进度条当前的值
     /// </summary>
     /// <returns>The progress.</returns>
-    float getProgress()
+    public float getProgress()
     {
         if (slider != null)
         {

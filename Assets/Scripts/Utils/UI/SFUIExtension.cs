@@ -148,9 +148,10 @@ public class SFScrollRectExtension : MonoBehaviour
         {
             // 横向
             m_curLength += trans.sizeDelta.x;
-            newPos = new Vector3(m_curLength - trans.sizeDelta.y / 2, 0);
+            newPos = new Vector3(m_curLength - trans.sizeDelta.x / 2, -trans.sizeDelta.y / 2);
         }
-        GameObject.Instantiate(item, newPos, Quaternion.identity, gameObject.transform);
+        var newOne = GameObject.Instantiate(item, sr.content.transform, false);
+        newOne.transform.localPosition = newPos;
     }
 
     static public SFScrollRectExtension Get(GameObject go)
