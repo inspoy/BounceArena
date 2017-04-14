@@ -278,6 +278,7 @@ GameObject:
   - component: {fileID: 224100844800178314}
   - component: {fileID: 222481751184133226}
   - component: {fileID: 114226290937934456}
+  - component: {fileID: 114904556976863022}
   m_Layer: 5
   m_Name: vwHUD
   m_TagString: Untagged
@@ -835,6 +836,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'Ping: --ms'
+--- !u!114 &114904556976863022
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1994236651710000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb4a4c42c5f540c091e15a55f0a7a0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114964444099886258
 MonoBehaviour:
   m_ObjectHideFlags: 1

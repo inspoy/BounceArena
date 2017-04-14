@@ -138,6 +138,7 @@ namespace SF
                 SFBattleData.instance.enterBattle_posX = data.posX;
                 SFBattleData.instance.enterBattle_posY = data.posY;
                 SFBattleData.instance.enterBattle_rotation = data.rotation;
+                SFBattleData.instance.enterBattle_maxLife = data.maxLife;
                 SFBattleData.instance.enterBattle_initRunTime = data.runTime;
 
                 SFUtils.log("玩家初始坐标:({0}, {1}),rot={2}", data.posX, data.posY, data.rotation);

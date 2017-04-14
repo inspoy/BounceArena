@@ -29,7 +29,8 @@ class Battle {
                     posY: this.users[uid].posY,
                     rotation: this.users[uid].rotation,
                     speedX: this.users[uid].speedX,
-                    speedY: this.users[uid].speedY
+                    speedY: this.users[uid].speedY,
+                    life: this.users[uid].life,
                 });
             }
         }
@@ -64,6 +65,7 @@ class Battle {
             skillId: 0,         // 角色将要释放的技能ID
             size: 1,            // 角色尺寸，碰撞检测时使用，半径
             life: 50,
+            maxLife: 50,
         };
         return 0;
     }

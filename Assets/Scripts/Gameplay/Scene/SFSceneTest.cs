@@ -13,6 +13,7 @@ public class SFSceneTest : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        SFSceneManager.addView("vwLogin");
+        float a = 123.456f;
+        SFUtils.log(string.Format("{0:D}:{1:F2}", (int)a / 60, a % 60));
     }
 }

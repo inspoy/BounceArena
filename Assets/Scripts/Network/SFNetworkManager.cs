@@ -69,7 +69,7 @@ namespace SF
             dispatcher = new SFEventDispatcher(this);
             m_client = new SFTcpClient();
             m_ping = -1;
-            m_heartbeatTimer = 0;
+            m_heartbeatTimer = SFCommonConf.instance.heatbeatInterval;
             m_client.init(SFCommonConf.instance.serverIp, SFCommonConf.instance.serverPort, onRecvMsg, ret =>
                 {
                     if (ret == 0)

@@ -95,4 +95,14 @@ namespace SF
         /// </summary>
         public float speedY;
     };
+
+    /// <summary>
+    /// 用于同步血量给UI
+    /// </summary>
+    public class SFUnitLifeChange : ISFEventData
+    {
+        public string uid;
+        public int curLife;
+        public int maxLife;
+    };
 }

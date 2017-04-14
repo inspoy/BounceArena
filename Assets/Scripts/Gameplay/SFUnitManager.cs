@@ -47,6 +47,8 @@ public class SFUnitManager : MonoBehaviour
         heroConf.rotation = SFBattleData.instance.enterBattle_rotation;
         heroConf.speedX = 0;
         heroConf.speedY = 0;
+        heroConf.life = SFBattleData.instance.enterBattle_maxLife;
+        heroConf.maxLife = SFBattleData.instance.enterBattle_maxLife;
         m_heroController.setHero(addUnit(heroConf));
 
         // 其他角色
@@ -60,6 +62,8 @@ public class SFUnitManager : MonoBehaviour
             conf.rotation = item.rotation;
             conf.speedX = item.speedX;
             conf.speedY = item.speedY;
+            conf.life = item.life;
+            conf.maxLife = item.maxLife;
             addUnit(conf);
         }
         SFUtils.log("初始化角色完成");
@@ -144,6 +148,8 @@ public class SFUnitManager : MonoBehaviour
             conf.posX = data.posX;
             conf.posY = data.posY;
             conf.rotation = data.rotaion;
+            conf.life = data.life;
+            conf.maxLife = data.maxLife;
             addUnit(conf);
         }
         else

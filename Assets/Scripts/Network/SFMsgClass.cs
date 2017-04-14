@@ -142,6 +142,11 @@ namespace SF
         /// 自己的初始位置朝向
         /// </summary>
         public float rotation;
+
+        /// <summary>
+        /// 自己的最大生命值
+        /// </summary>
+        public int maxLife;
     };
     #endregion
 
@@ -215,6 +220,8 @@ namespace SF
         public float posX;
         public float posY;
         public float rotaion;
+        public int life;
+        public int maxLife;
     };
     #endregion
 }

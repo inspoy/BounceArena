@@ -16,6 +16,8 @@ public class SFUnitController : MonoBehaviour
     float m_curPosX;
     float m_curPosY;
     float m_curRotation;
+    int m_curLife;
+    int m_maxLife;
 
     // 转向加速度
     const int ROTATE_ACC = 10;
@@ -37,6 +39,15 @@ public class SFUnitController : MonoBehaviour
         m_curPosY += m_curSpeedY * Time.deltaTime;
 
         setPositionOfGo();
+
+        if (uid == SFUserData.instance.uid)
+        {
+            var data = new SFUnitLifeChange();
+            data.uid = uid;
+            data.curLife = m_curLife;
+            data.maxLife = m_maxLife;
+            SFUserData.instance.dispatcher.dispatchEvent(SFEvent.EVENT_HERO_LIFE_CHANGE, data);
+        }
     }
 
     public void init(SFUnitConf conf)
@@ -48,6 +59,8 @@ public class SFUnitController : MonoBehaviour
         m_curRotation = conf.rotation;
         m_curSpeedX = conf.speedX;
         m_curSpeedY = conf.speedY;
+        m_curLife = conf.life;
+        m_maxLife = conf.maxLife;
 
         transform.position = new Vector3(m_curPosX, 0, m_curPosY);
         transform.rotation = Quaternion.Euler(0, m_curRotation, 0);
@@ -60,6 +73,8 @@ public class SFUnitController : MonoBehaviour
         m_curRotation = info.rotation;
         m_curSpeedX = info.speedX;
         m_curSpeedY = info.speedY;
+        m_curLife = info.life;
+        m_maxLife = info.maxLife;
 
         if (info.skillId > 0)
         {

@@ -17,6 +17,7 @@ resp,List<SFMsgDataRemoteUserInfo>,users,其他玩家的信息
 resp,float,posX,自己的初始位置X
 resp,float,posY,自己的初始位置Y
 resp,float,rotation,自己的初始位置朝向
+resp,int,maxLife,自己的最大生命值
 END,,,
 pid,3,,
 name,UnitSync,,
@@ -41,4 +42,6 @@ resp,string,uid,
 resp,float,posX,
 resp,float,posY,
 resp,float,rotaion,
+resp,int,life,
+resp,int,maxLife,
 END,,,

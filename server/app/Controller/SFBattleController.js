@@ -341,7 +341,8 @@ const onUserLogin = function (data) {
                     uid: uid,
                     posX: posX,
                     posY: posY,
-                    rotation: 0
+                    rotation: 0,
+                    life: battle.users[uid].life
                 };
                 m_pusher(users, JSON.stringify(resp2));
             }

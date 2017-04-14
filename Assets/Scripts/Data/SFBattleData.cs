@@ -43,5 +43,6 @@ namespace SF
         public float enterBattle_posY;
         public float enterBattle_rotation;
         public int enterBattle_initRunTime;
+        public int enterBattle_maxLife;
     }
 }
