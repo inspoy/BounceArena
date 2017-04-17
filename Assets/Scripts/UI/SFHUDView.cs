@@ -1,5 +1,5 @@
 /**
- * Created on 2017/04/14 by inspoy
+ * Created on 2017/04/17 by inspoy
  * All rights reserved.
  */
 
@@ -79,5 +79,10 @@ public class SFHUDView : SFBaseView
 #else
         SFUtils.log("View created: vwHUD");
 #endif
+    }
+
+    public SFHUDPresenter getPresenter()
+    {
+        return m_presenter as SFHUDPresenter;
     }
 }

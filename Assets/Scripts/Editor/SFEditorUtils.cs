@@ -225,6 +225,11 @@ namespace SF
                 "        SFUtils.log(\"View created: vw" + viewName + "\");\n" +
                 "#endif\n" +
                 "    }\n" +
+                "\n" +
+                "    public SF" + viewName + "Presenter getPresenter()\n" +
+                "    {\n" +
+                "        return m_presenter as SF" + viewName + "Presenter;\n" +
+                "    }\n" +
                 "}\n";
             presenterCode += presenterPart1 + "        }\n\n" +
                 "        public void onViewRemoved()\n" +

@@ -105,4 +105,12 @@ namespace SF
         public int curLife;
         public int maxLife;
     };
+
+    public class SFUnitAddRemove : ISFEventData
+    {
+        public string uid;
+        public bool addOrRemove;
+        public int curLife;
+        public int maxLife;
+    }
 }

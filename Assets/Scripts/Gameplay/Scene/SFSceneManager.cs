@@ -44,17 +44,18 @@ public class SFSceneManager : MonoBehaviour
     /// <param name="sibIdx">层级，默认最上层</param>
     static public GameObject addView(string viewName, Transform trans = null, int sibIdx = -1)
     {
-        var prefab = Resources.Load("Prefabs/Views/" + viewName) as GameObject;
-        if (prefab == null)
-        {
-            SFUtils.logWarning(string.Format("找不到view:{0}", viewName));
-            return null;
-        }
+        var prefab = getView(viewName);
         return SFSceneManager.addView(prefab, trans, sibIdx);
     }
 
+    /// <summary>
+    /// 根据viewName获取prefab
+    /// </summary>
+    /// <returns>The view.</returns>
+    /// <param name="viewName">View name.</param>
     static public GameObject getView(string viewName)
     {
+        // TODO: 用Dictionary缓存已经加载过的View
         var prefab = Resources.Load("Prefabs/Views/" + viewName) as GameObject;
         if (prefab == null)
         {

@@ -251,6 +251,7 @@ const onUpdate = function () {
                         speedX: userItem.speedX,
                         speedY: userItem.speedY,
                         life: userItem.life,
+                        maxLife: userItem.maxLife,
                         skillId: userItem.skillId,
                         skillData: userItem.skillData
                     });
@@ -631,6 +632,7 @@ const onBallEnterUser = function (ball, user) {
     const NY = PY / dis;
     user.speedX = NX * ball.power / user.mass;
     user.speedY = NY * ball.power / user.mass;
+    logInfo(`角色${user.uid}受到伤害${ball.power}，当前${user.life}/${user.maxLife}`);
 };
 
 /**

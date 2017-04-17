@@ -23,7 +23,8 @@ namespace SF
 
             m_view.addEventListener(m_view.btnMenu, SFEvent.EVENT_UI_CLICK, onMenu);
             SFNetworkManager.instance.dispatcher.addEventListener(this, SFEvent.EVENT_NETWORK_PING, onPing);
-            SFUserData.instance.dispatcher.addEventListener(this, SFEvent.EVENT_HERO_LIFE_CHANGE, onLifeChange);
+            SFBattleData.instance.dispatcher.addEventListener(this, SFEvent.EVENT_UNIT_LIFE_CHANGE, onLifeChange);
+            SFBattleData.instance.dispatcher.addEventListener(this, SFEvent.EVENT_UNIT_ADD_REMOVE, onUnitAddRemove);
 
             m_view.scrLeftPlayers.SetFillType(1);
             m_view.scrSkills.SetFillType(2);
@@ -41,7 +42,10 @@ namespace SF
         void onUpdate(float dt)
         {
             m_runTime += dt;
-            m_view.lblTime.text = string.Format("{0:D}:{1:F2}", (int)m_runTime / 60, m_runTime % 60);
+            int min = (int)m_runTime / 60;
+            int sec = (int)m_runTime % 60;
+            float ms = m_runTime - (int)m_runTime;
+            m_view.lblTime.text = string.Format("{0:D}:{1:D2}.{2:D2}", min, sec, (int)(ms * 100));
         }
 
         void onMenu(SFEvent e)
@@ -57,7 +61,30 @@ namespace SF
         void onLifeChange(SFEvent e)
         {
             var data = e.data as SFUnitLifeChange;
-            // TODO
+            if (data.uid == SFUserData.instance.uid)
+            {
+                m_view.proLife.setProgress(1.0f * data.curLife / data.maxLife);
+                SFUtils.log("当前血量{0}/{1}", data.curLife, data.maxLife);
+            }
+        }
+
+        void onUnitAddRemove(SFEvent e)
+        {
+            var data = e.data as SFUnitAddRemove;
+            if (data.addOrRemove == true)
+            {
+                // 添加角色
+                var newGO = m_view.scrLeftPlayers.AddItem(SFSceneManager.getView("vwUnitStatusItem"));
+                if (newGO != null)
+                {
+                    var item = newGO.GetComponent<SFUnitStatusItemView>().getPresenter();
+                    item.init(data);
+                }
+            }
+            else
+            {
+                // 移除角色
+            }
         }
     }
 }

@@ -47,13 +47,14 @@ public static class SFUIExtension
     /// </summary>
     /// <param name="scr">ScrollRect</param>
     /// <param name="item">要加的Item</param>
-    static public void AddItem(this ScrollRect scr, GameObject item)
+    static public GameObject AddItem(this ScrollRect scr, GameObject item)
     {
         var com = SFScrollRectExtension.Get(scr.gameObject);
         if (com != null)
         {
-            com.addItem(item);
+            return com.addItem(item);
         }
+        return null;
     }
 }
 
@@ -124,16 +125,16 @@ public class SFScrollRectExtension : MonoBehaviour
         m_items = new List<GameObject>();
     }
 
-    public void addItem(GameObject item)
+    public GameObject addItem(GameObject item)
     {
         if (item == null)
         {
-            return;
+            return null;
         }
         var trans = item.GetComponent<RectTransform>();
         if (trans == null)
         {
-            return;
+            return null;
         }
         m_items.Add(item);
         m_curItemCount += 1;
@@ -152,6 +153,7 @@ public class SFScrollRectExtension : MonoBehaviour
         }
         var newOne = GameObject.Instantiate(item, sr.content.transform, false);
         newOne.transform.localPosition = newPos;
+        return newOne;
     }
 
     static public SFScrollRectExtension Get(GameObject go)

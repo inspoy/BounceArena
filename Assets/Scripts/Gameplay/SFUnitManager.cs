@@ -87,6 +87,12 @@ public class SFUnitManager : MonoBehaviour
             var controller = controllerGO.GetComponent<SFUnitController>();
             controller.init(conf);
             m_controllers.Add(conf.uid, controller);
+            var eventData = new SFUnitAddRemove();
+            eventData.uid = conf.uid;
+            eventData.addOrRemove = true;
+            eventData.curLife = conf.life;
+            eventData.maxLife = conf.maxLife;
+            SFBattleData.instance.dispatcher.dispatchEvent(SFEvent.EVENT_UNIT_ADD_REMOVE, eventData);
             return controller;
         }
         return null;
@@ -104,6 +110,10 @@ public class SFUnitManager : MonoBehaviour
             var unit = m_controllers[uid];
             unit.destroy();
             m_controllers.Remove(uid);
+            var eventData = new SFUnitAddRemove();
+            eventData.uid = uid;
+            eventData.addOrRemove = false;
+            SFBattleData.instance.dispatcher.dispatchEvent(SFEvent.EVENT_UNIT_ADD_REMOVE, eventData);
             return true;
         }
         return false;

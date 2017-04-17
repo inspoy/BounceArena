@@ -11,7 +11,7 @@ namespace SF
 {
     public class SFUserData
     {
-        public class SFUserSkillConf
+        public struct SFUserSkillConf
         {
             public int space;
             public int left;

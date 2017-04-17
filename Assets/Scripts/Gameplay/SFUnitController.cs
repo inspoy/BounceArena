@@ -39,15 +39,6 @@ public class SFUnitController : MonoBehaviour
         m_curPosY += m_curSpeedY * Time.deltaTime;
 
         setPositionOfGo();
-
-        if (uid == SFUserData.instance.uid)
-        {
-            var data = new SFUnitLifeChange();
-            data.uid = uid;
-            data.curLife = m_curLife;
-            data.maxLife = m_maxLife;
-            SFUserData.instance.dispatcher.dispatchEvent(SFEvent.EVENT_HERO_LIFE_CHANGE, data);
-        }
     }
 
     public void init(SFUnitConf conf)
@@ -68,6 +59,8 @@ public class SFUnitController : MonoBehaviour
 
     public void updateStatus(SFMsgDataUserSyncInfo info)
     {
+        bool lifeChanged = m_curLife != info.life;
+
         m_curPosX = info.posX;
         m_curPosY = info.posY;
         m_curRotation = info.rotation;
@@ -79,6 +72,15 @@ public class SFUnitController : MonoBehaviour
         if (info.skillId > 0)
         {
             this.skill(info.skillId, info.skillData);
+        }
+
+        if (lifeChanged)
+        {
+            var data = new SFUnitLifeChange();
+            data.uid = uid;
+            data.curLife = m_curLife;
+            data.maxLife = m_maxLife;
+            SFBattleData.instance.dispatcher.dispatchEvent(SFEvent.EVENT_UNIT_LIFE_CHANGE, data);
         }
     }
 
