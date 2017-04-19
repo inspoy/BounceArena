@@ -38,6 +38,8 @@ namespace SF
         {
             m_view.lblTitle.text = "Button Clicked!";
             m_view.btnOk.SetText("修改了button的Text");
+            var md5 = SFUtils.getMD5("Abcd.1234@BA!");
+            SFUtils.log(SFUtils.getMD5(md5));
         }
 
         void onClose(SFEvent e)

@@ -170,6 +170,14 @@ namespace SF
                 else if (prefix == "img")
                 {
                     // Image
+                    viewPart1 += "    public Image " + GO.name + " { get { return m_" + GO.name + "; } }\n";
+                    viewPart2 += "    private Image m_" + GO.name + ";\n";
+                    viewPart3 +=
+                        "        GameObject " + GO.name + "GO = SFUtils.findChildWithParent(gameObject, \"" + GO.name + "\");\n" +
+                        "        if (" + GO.name + "GO != null)\n" +
+                        "        {\n" +
+                        "            m_" + GO.name + " = " + GO.name + "GO.GetComponent<Image>();\n" +
+                        "        }\n\n";
                 }
                 else if (prefix == "txt")
                 {

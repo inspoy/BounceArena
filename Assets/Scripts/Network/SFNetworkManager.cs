@@ -219,6 +219,14 @@ namespace SF
                 {
                     obj = JsonUtility.FromJson<SFResponseMsgNotifyNewUserJoin>(jsonData);
                 }
+                else if (pid == 6)
+                {
+                    obj = JsonUtility.FromJson<SFResponseMsgHostRoom>(jsonData);
+                }
+                else if (pid == 7)
+                {
+                    obj = JsonUtility.FromJson<SFResponseMsgJoinRoom>(jsonData);
+                }
                 else // __end__
                 {
                     SFUtils.logWarning("不能识别的协议号: {0}", pid);

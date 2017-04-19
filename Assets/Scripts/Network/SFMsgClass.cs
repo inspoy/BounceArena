@@ -224,5 +224,61 @@ namespace SF
         public int maxLife;
     };
     #endregion
+
+    #region 6-创建房间
+    /// <summary>
+    /// [Req]创建房间
+    /// </summary>
+    [Serializable]
+    public class SFRequestMsgHostRoom : SFBaseRequestMessage
+    {
+        public SFRequestMsgHostRoom()
+        {
+            pid = 6;
+        }
+    };
+
+    /// <summary>
+    /// [Resp]创建房间
+    /// </summary>
+    [Serializable]
+    public class SFResponseMsgHostRoom : SFBaseResponseMessage
+    {
+        public const string pName = "socket_6";
+        public SFResponseMsgHostRoom()
+        {
+            pid = 6;
+        }
+        public string roomId;
+    };
+    #endregion
+
+    #region 7-加入房间，返回不一定及时，最多5秒
+    /// <summary>
+    /// [Req]加入房间，返回不一定及时，最多5秒
+    /// </summary>
+    [Serializable]
+    public class SFRequestMsgJoinRoom : SFBaseRequestMessage
+    {
+        public SFRequestMsgJoinRoom()
+        {
+            pid = 7;
+        }
+    };
+
+    /// <summary>
+    /// [Resp]加入房间，返回不一定及时，最多5秒
+    /// </summary>
+    [Serializable]
+    public class SFResponseMsgJoinRoom : SFBaseResponseMessage
+    {
+        public const string pName = "socket_7";
+        public SFResponseMsgJoinRoom()
+        {
+            pid = 7;
+        }
+        public string roomId;
+    };
+    #endregion
 }
-// Last Update: 2017/04/14
+// Last Update: 2017/04/18
