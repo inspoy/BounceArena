@@ -9,6 +9,7 @@ const errCode = {
     userNotLogin: 2002,         // 用户未登录
     userAlreadyJoin: 2003,      // 用户已经加入了战场
     userNotJoin: 2004,          // 用户未加入战场
+    joinNotAvailable: 2005,     // 没有合适的房间
 
     success: 0
 };
@@ -29,6 +30,7 @@ module.exports = {
     ballAcc: 30, // 火球发射后的加速度
     ballLife: 5, // 火球寿命
     ballInvincibleTime: 0.5, // 无敌时间
+    roomUserLimit: 6, // 每个房间能容纳的最大玩家数量
 
     __more__: 0
 };

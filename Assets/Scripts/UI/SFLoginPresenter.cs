@@ -18,7 +18,6 @@ namespace SF
         SFLoginView m_view;
         string m_infoMsg;
         bool m_willReset;
-        bool m_willSwitch;
 
         public void initWithView(SFBaseView view)
         {
@@ -29,7 +28,6 @@ namespace SF
             m_view.setUpdator(update);
             m_infoMsg = "";
             m_willReset = false;
-            m_willSwitch = false;
         }
 
         public void onViewRemoved()
@@ -60,7 +58,6 @@ namespace SF
                     m_willReset = true;
                 });
             SFNetworkManager.instance.dispatcher.addEventListener(this, SFResponseMsgUnitLogin.pName, onLoginResult);
-            SFNetworkManager.instance.dispatcher.addEventListener(this, SFResponseMsgNotifyRemoteUsers.pName, onRemoteUsers);
         }
 
         void onConnectResult(SFEvent e)
@@ -93,11 +90,6 @@ namespace SF
                 resetConnection();
                 m_willReset = false;
             }
-            if (m_willSwitch)
-            {
-                m_view.StartCoroutine(loadSceneGame());
-                m_willSwitch = false;
-            }
         }
 
         void doLogin()
@@ -112,36 +104,14 @@ namespace SF
             var data = e.data as SFResponseMsgUnitLogin;
             if (data.retCode == 0)
             {
-                m_infoMsg = "登陆成功，正在加载游戏...";
-                m_willSwitch = true;
+                m_infoMsg = "登陆成功...";
+                m_view.removeView();
+                SFSceneManager.addView("vwMain");
             }
             else
             {
                 m_infoMsg = string.Format("登陆失败，错误码：{0}", data.retCode);
                 m_willReset = true;
-            }
-        }
-
-        IEnumerator loadSceneGame()
-        {
-            var op = SceneManager.LoadSceneAsync("SceneGame");
-            yield return op;
-        }
-
-        void onRemoteUsers(SFEvent e)
-        {
-            var data = e.data as SFResponseMsgNotifyRemoteUsers;
-            if (data.retCode == 0)
-            {
-                SFBattleData.instance.enterBattle_mapId = data.mapId;
-                SFBattleData.instance.enterBattle_remoteUsers = data.users;
-                SFBattleData.instance.enterBattle_posX = data.posX;
-                SFBattleData.instance.enterBattle_posY = data.posY;
-                SFBattleData.instance.enterBattle_rotation = data.rotation;
-                SFBattleData.instance.enterBattle_maxLife = data.maxLife;
-                SFBattleData.instance.enterBattle_initRunTime = data.runTime;
-
-                SFUtils.log("玩家初始坐标:({0}, {1}),rot={2}", data.posX, data.posY, data.rotation);
             }
         }
     }

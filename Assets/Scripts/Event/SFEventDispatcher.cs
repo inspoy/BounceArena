@@ -180,15 +180,14 @@ namespace SF
             int count = 0;
             if (m_dictListeners.ContainsKey(e.eventType))
             {
-                var selectors = m_dictListeners[e.eventType];
-                foreach (var item in selectors)
+                var pairs = m_dictListeners[e.eventType];
+                for (int i = pairs.Count - 1; i >= 0; --i)
                 {
-                    item.selector(e);
+                    pairs[i].selector(e);
                     count += 1;
                 }
             }
             return count;
         }
     };
-
 }

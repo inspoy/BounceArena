@@ -1,5 +1,5 @@
 /**
- * Created on 2017/04/18 by inspoy
+ * Created on 2017/04/21 by inspoy
  * All rights reserved.
  */
 
@@ -12,11 +12,9 @@ using SF;
 
 public class SFPlayView : SFBaseView
 {
-    public Button btnHost { get { return m_btnHost; } }
     public Button btnJoin { get { return m_btnJoin; } }
     public Text lblInfo { get { return m_lblInfo; } }
 
-    private Button m_btnHost;
     private Button m_btnJoin;
     private Text m_lblInfo;
 
@@ -26,12 +24,6 @@ public class SFPlayView : SFBaseView
 #if UNITY_EDITOR
         var time1 = DateTime.Now;
 #endif
-        GameObject btnHostGO = SFUtils.findChildWithParent(gameObject, "btnHost");
-        if (btnHostGO != null)
-        {
-            m_btnHost = btnHostGO.GetComponent<Button>();
-        }
-
         GameObject btnJoinGO = SFUtils.findChildWithParent(gameObject, "btnJoin");
         if (btnJoinGO != null)
         {

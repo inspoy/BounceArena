@@ -24,7 +24,7 @@ const onRequest = function (jsonString) {
     }
     catch (e) {
         logInfo("解析请求失败:" + jsonString +
-            "\n错误信息:" + e);
+            "\n错误信息:" + e.stack);
     }
 };
 
@@ -86,6 +86,7 @@ const initControllers = function () {
     };
     controllerMap[1] = SFUserController;
     controllerMap[3] = SFBattleController;
+    controllerMap[6] = SFUserController;
 
     utils.traverse(controllerMap, function (item) {
         if (item && typeof(item.setPusher) == "function") {
@@ -99,9 +100,6 @@ const initControllers = function () {
  */
 const main = function () {
     initControllers();
-
-    // TODO: 先临时创建一场战斗
-    battleData.battleId = SFBattleController.createBattle();
 
     process.on("SIGINT", function () {
         logInfo("GameServer即将退出");

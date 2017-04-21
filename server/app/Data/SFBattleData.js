@@ -24,13 +24,13 @@ class Battle {
         for (const uid in this.users) {
             if (myUid != uid && this.users.hasOwnProperty(uid)) {
                 ret.push({
-                    uid: this.users[uid].uid,
-                    posX: this.users[uid].posX,
-                    posY: this.users[uid].posY,
-                    rotation: this.users[uid].rotation,
-                    speedX: this.users[uid].speedX,
-                    speedY: this.users[uid].speedY,
-                    life: this.users[uid].life,
+                    uid:        this.users[uid].uid,
+                    posX:       this.users[uid].posX,
+                    posY:       this.users[uid].posY,
+                    rotation:   this.users[uid].rotation,
+                    speedX:     this.users[uid].speedX,
+                    speedY:     this.users[uid].speedY,
+                    life:       this.users[uid].life,
                 });
             }
         }
@@ -58,7 +58,7 @@ class Battle {
             speedX: 0,
             speedY: 0,
             topSpeed: 5,        // 最大速度
-            mass: 1,           // 质量，决定碰撞效果
+            mass: 1,            // 质量，决定碰撞效果
             accX: 0,
             accY: 0,
             accPower: 20,       // 加速度系数
@@ -115,7 +115,6 @@ class Battle {
 }
 
 module.exports = {
-    battleId: "", // TODO:临时的战斗ID，之后要改成动态创建，这个属性要删掉
     Battle: Battle,
     battleList: {},
     updateCost: 0

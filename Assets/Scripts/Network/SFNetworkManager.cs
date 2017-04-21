@@ -139,7 +139,7 @@ namespace SF
         public void update(float dt)
         {
             // 发送队列
-            while (m_sendQueue.Count > 0)
+            while (m_sendQueue != null && m_sendQueue.Count > 0)
             {
                 SFBaseRequestMessage req = m_sendQueue.Dequeue();
                 string data = JsonUtility.ToJson(req);
@@ -151,7 +151,7 @@ namespace SF
             }
 
             // 接收队列
-            while (m_recvQueue.Count > 0)
+            while (m_recvQueue != null && m_recvQueue.Count > 0)
             {
                 string data = m_recvQueue.Dequeue();
                 SFBaseResponseMessage obj = null;
@@ -220,10 +220,6 @@ namespace SF
                     obj = JsonUtility.FromJson<SFResponseMsgNotifyNewUserJoin>(jsonData);
                 }
                 else if (pid == 6)
-                {
-                    obj = JsonUtility.FromJson<SFResponseMsgHostRoom>(jsonData);
-                }
-                else if (pid == 7)
                 {
                     obj = JsonUtility.FromJson<SFResponseMsgJoinRoom>(jsonData);
                 }

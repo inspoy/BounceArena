@@ -15,7 +15,7 @@ public class SFSceneTitle : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-//        SFSceneManager.addView("vwLogin");
+        SFSceneManager.addView("vwLogin");
     }
 
     // Update is called once per frame

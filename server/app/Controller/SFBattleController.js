@@ -26,56 +26,6 @@ const onRequest = function (req) {
 };
 
 /**
- * 创建一场战斗
- * @returns {string} battleId
- */
-const createBattle = function () {
-    const battle = new battleData.Battle();
-    battle.battleId = utils.getRandomString("battle_", 5);
-    battle.walls = {
-        wall1: {
-            wallId: "wall1",
-            posX: 0,
-            posY: -16,
-            length: 32,
-            width: 1,
-            normalX: 0,
-            normalY: 1
-        },
-        wall2: {
-            wallId: "wall2",
-            posX: -16,
-            posY: 0,
-            length: 32,
-            width: 1,
-            normalX: 1,
-            normalY: 0
-        },
-        wall3: {
-            wallId: "wall3",
-            posX: 0,
-            posY: 16,
-            length: 32,
-            width: 1,
-            normalX: 0,
-            normalY: -1
-        },
-        wall4: {
-            wallId: "wall4",
-            posX: 16,
-            posY: 0,
-            length: 32,
-            width: 1,
-            normalX: -1,
-            normalY: 0
-        }
-    }; // TODO: 临时先弄4面墙，之后再改成配置
-    battleData.battleList[battle.battleId] = battle;
-    logInfo("创建了一场新的战斗: " + battle.battleId);
-    return battle.battleId;
-};
-
-/**
  * 用户同步操作信息
  * @param req
  */
@@ -399,7 +349,12 @@ const onUserLogout = function (data) {
         rotation: 0
     };
     m_pusher(users, JSON.stringify(resp2));
-    dispatcher.emit("onBattleStart", uid);
+    dispatcher.emit("onLogoutResult", uid);
+
+    // 如果最后一个用户退出后房间为空，则删除这个房间
+    if (battleData.battleList[battleId].users.length == 0) {
+        delete battleData.battleList[battleId];
+    }
 };
 
 /**
@@ -653,7 +608,6 @@ dispatcher.addListener("onUserLogout", onUserLogout);
 setInterval(onUpdate, 40);
 
 module.exports = {
-    createBattle: createBattle,
     onRequest: onRequest,
     setPusher: function (pusher) {
         m_pusher = pusher;
