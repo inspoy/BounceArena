@@ -51,13 +51,13 @@ namespace SF
             m_view.btnLogin.interactable = false;
             m_infoMsg = "正在连接服务器...";
             SFNetworkManager.instance.init();
-            SFNetworkManager.instance.dispatcher.addEventListener(this, SFEvent.EVENT_NETWORK_READY, onConnectResult);
-            SFNetworkManager.instance.dispatcher.addEventListener(this, SFEvent.EVENT_NETWORK_INTERRUPTED, result =>
+            SFNetworkManager.instance.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_READY, onConnectResult);
+            SFNetworkManager.instance.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_INTERRUPTED, result =>
                 {
                     m_infoMsg = "网络连接中断";
                     m_willReset = true;
                 });
-            SFNetworkManager.instance.dispatcher.addEventListener(this, SFResponseMsgUnitLogin.pName, onLoginResult);
+            SFNetworkManager.instance.dispatcher.addEventListener(SFResponseMsgUnitLogin.pName, onLoginResult);
         }
 
         void onConnectResult(SFEvent e)

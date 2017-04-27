@@ -23,7 +23,7 @@ public class SFBaseView : MonoBehaviour
     public void addEventListener(Component widget, string eventType, SFListenerSelector sel)
     {
         var dispatcher = SFUIEventListener.getDispatcherWithGo(widget.gameObject);
-        dispatcher.addEventListener(this, eventType, sel);
+        dispatcher.addEventListener(eventType, sel);
     }
 
     /// <summary>

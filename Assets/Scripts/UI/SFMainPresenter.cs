@@ -21,7 +21,7 @@ namespace SF
             m_view = view as SFMainView;
 
             m_view.addEventListener(m_view.btnLogout, SFEvent.EVENT_UI_CLICK, onLogout);
-            SFNetworkManager.instance.dispatcher.addEventListener(this, SFResponseMsgUnitLogin.pName, onLogoutResult);
+            SFNetworkManager.instance.dispatcher.addEventListener(SFResponseMsgUnitLogin.pName, onLogoutResult);
 
             SFSceneManager.addView("vwPlay", m_view.imgPos.transform);
             m_view.lblUid.text = SFUserData.instance.uid;

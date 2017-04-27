@@ -93,7 +93,7 @@ class Battle {
             accX: commonConf.ballAcc * Math.sin(rotation / 180 * Math.PI),
             accY: commonConf.ballAcc * Math.cos(rotation / 180 * Math.PI),
             size: 1,  // 球的尺寸，碰撞检测时使用
-            power: 10, // 球威力，决定伤害和被炸飞角色的速度
+            power: 30, // 球威力，决定伤害和被炸飞角色的速度
             life: commonConf.ballLife,
             invincibleTime: commonConf.ballInvincibleTime,
             explode: false, // 是否爆炸了

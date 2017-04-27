@@ -15,7 +15,14 @@ public class SFSceneTitle : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        SFSceneManager.addView("vwLogin");
+        if (SFNetworkManager.instance != null && SFNetworkManager.instance.isReady())
+        {
+            SFSceneManager.addView("vwMain");
+        }
+        else
+        {
+            SFSceneManager.addView("vwLogin");
+        }
     }
 
     // Update is called once per frame

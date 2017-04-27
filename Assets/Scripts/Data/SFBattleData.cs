@@ -44,5 +44,10 @@ namespace SF
         public float enterBattle_rotation;
         public int enterBattle_initRunTime;
         public int enterBattle_maxLife;
+
+        /// <summary>
+        /// 游戏已经结束
+        /// </summary>
+        public bool isGameOver;
     }
 }

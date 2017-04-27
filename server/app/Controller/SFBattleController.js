@@ -60,8 +60,8 @@ const onUserSyncInfo = function (req) {
  * 固定时间更新，处理逻辑
  */
 const onUpdate = function () {
-    // dt = 50ms
-    const dt = 0.05;
+    // dt = 40ms
+    const dt = commonConf.updateDt / 1000;
     const startTime = new Date();
     const battleList = battleData.battleList;
     for (const battleId in battleList) {
@@ -75,16 +75,19 @@ const onUpdate = function () {
                 battle.runTime += 40;
                 // 更新坐标
                 utils.traverse(battle.users, function (userItem) {
-                    userItem.speedX += userItem.accX * dt;
-                    userItem.speedY += userItem.accY * dt;
+                    logInfo("------");
+                    logInfo("speed:" + userItem.speedX.toFixed(3) + "," + userItem.speedY.toFixed(3));
+                    logInfo("  pos:" + userItem.posX.toFixed(3) + "," + userItem.posY.toFixed(3));
                     // 限制最高速度
                     const k = calcSpeedLimit(userItem.speedX, userItem.speedY, userItem.topSpeed);
-                    userItem.speedX *= k;
-                    userItem.speedY *= k;
+                    if (k == 1) {
+                        userItem.speedX += userItem.accX * dt;
+                        userItem.speedY += userItem.accY * dt;
+                    }
                     userItem.posX += userItem.speedX * dt;
                     userItem.posY += userItem.speedY * dt;
-                    if (userItem.accX <= 0 && userItem.accY <= 0) {
-                        // 如果当前没有移动，速度均匀衰减
+                    if ((userItem.accX <= 0 && userItem.accY <= 0) || k < 1) {
+                        // 如果当前没有移动或速度超速，速度均匀衰减
                         userItem.speedX *= 0.9;
                         userItem.speedY *= 0.9;
                         if (Math.abs(userItem.speedX) < 0.01) {
@@ -234,9 +237,10 @@ const onUpdate = function () {
                 });
                 // 清理被击败的角色
                 utils.traverse(battle.users, function (userItem) {
-                    if (userItem.life <= 0)
-                    {
+                    if (userItem.life <= 0) {
                         delete battle.users[userItem.uid];
+                        onUserLogout({uid: userItem.uid, battleId: battle.battleId});
+                        userData.onlineUserList[userItem.uid].battleId = "";
                     }
                 });
             })(battle);
@@ -244,7 +248,7 @@ const onUpdate = function () {
     }
     const endTime = new Date();
     const costTime = endTime - startTime;
-    if (costTime > 40) {
+    if (costTime > dt * 800) {
         logInfo(`BattleController.update()耗时过多: ${costTime}ms`, -1);
     }
     if (costTime > 1) {
@@ -327,11 +331,19 @@ const onUserLogin = function (data) {
     dispatcher.emit("onBattleStart", uid);
 };
 
+/**
+ * 用户登出时调用
+ * @param {object} data 格式{uid: req.uid, battleId: battleId}
+ */
 const onUserLogout = function (data) {
     const uid = data.uid;
     const battleId = data.battleId;
-    logInfo(`用户"${uid}"离开了战场${battleId}`);
     const battle = battleData.battleList[battleId];
+    if (battle == undefined) {
+        // 战场已经不存在了
+        return;
+    }
+    logInfo(`用户"${uid}"离开了战场${battleId}`);
     battle.removeUnit(uid);
     const users = [];
     utils.traverse(battle.users, function (userItem) {
@@ -352,7 +364,8 @@ const onUserLogout = function (data) {
     dispatcher.emit("onLogoutResult", uid);
 
     // 如果最后一个用户退出后房间为空，则删除这个房间
-    if (battleData.battleList[battleId].users.length == 0) {
+    if (Object.keys(battleData.battleList[battleId].users).length == 0) {
+        logInfo(`战场${battleId}已被销毁`);
         delete battleData.battleList[battleId];
     }
 };
@@ -461,10 +474,10 @@ const onUserEnterUser = function (user1, user2, dt) {
     const v1Y = user1.speedY;
     const v2X = user2.speedX;
     const v2Y = user2.speedY;
-    user1.speedX = ((m1-m2)*v1X+2*m2*v2X)/(m1+m2);
-    user1.speedY = ((m1-m2)*v1Y+2*m2*v2Y)/(m1+m2);
-    user2.speedX = ((m2-m1)*v2X+2*m1*v1X)/(m1+m2);
-    user2.speedY = ((m2-m1)*v2Y+2*m1*v1Y)/(m1+m2);
+    user1.speedX = ((m1 - m2) * v1X + 2 * m2 * v2X) / (m1 + m2);
+    user1.speedY = ((m1 - m2) * v1Y + 2 * m2 * v2Y) / (m1 + m2);
+    user2.speedX = ((m2 - m1) * v2X + 2 * m1 * v1X) / (m1 + m2);
+    user2.speedY = ((m2 - m1) * v2Y + 2 * m1 * v1Y) / (m1 + m2);
 
     user1.posX += user1.speedX * dt;
     user1.posY += user1.speedY * dt;
@@ -605,7 +618,7 @@ const onBallEnterBall = function (ball1, ball2) {
 
 dispatcher.addListener("onUserLogin", onUserLogin);
 dispatcher.addListener("onUserLogout", onUserLogout);
-setInterval(onUpdate, 40);
+setInterval(onUpdate, commonConf.updateDt);
 
 module.exports = {
     onRequest: onRequest,

@@ -43,8 +43,9 @@ namespace SF
         /// <param name="eventType">事件类型</param>
         /// <param name="sel">需要添加的监听</param>
         /// <returns>是否添加成功</returns>
-        public bool addEventListener(object listener, string eventType, SFListenerSelector sel)
+        public bool addEventListener(string eventType, SFListenerSelector sel)
         {
+            object listener = sel.Target;
             if (eventType != "" && sel != null) // 判断有效性
             {
                 if (hasEventListener(eventType, sel))

@@ -21,7 +21,7 @@ namespace SF
         {
             m_view = view as SFUnitStatusItemView;
 
-            SFBattleData.instance.dispatcher.addEventListener(this, SFEvent.EVENT_UNIT_LIFE_CHANGE, onLifeChange);
+            SFBattleData.instance.dispatcher.addEventListener(SFEvent.EVENT_UNIT_LIFE_CHANGE, onLifeChange);
         }
 
         public void onViewRemoved()

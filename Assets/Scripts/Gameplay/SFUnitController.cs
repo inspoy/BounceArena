@@ -18,6 +18,8 @@ public class SFUnitController : MonoBehaviour
     float m_curRotation;
     int m_curLife;
     int m_maxLife;
+    public GameObject body;
+    public ParticleSystem explodeFX;
 
     // 转向加速度
     const int ROTATE_ACC = 10;
@@ -28,7 +30,7 @@ public class SFUnitController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -81,6 +83,20 @@ public class SFUnitController : MonoBehaviour
             data.curLife = m_curLife;
             data.maxLife = m_maxLife;
             SFBattleData.instance.dispatcher.dispatchEvent(SFEvent.EVENT_UNIT_LIFE_CHANGE, data);
+            if (uid == SFUserData.instance.uid && m_curLife <= 0)
+            {
+                // 死亡，游戏结束
+                SFUtils.log("游戏结束");
+                m_curSpeedX = 0;
+                m_curSpeedY = 0;
+                body.SetActive(false);
+                // 播放爆炸动画
+                explodeFX.Play();
+                GameObject.Destroy(gameObject, 1.5f);
+                // 显示结束UI
+                SFSceneManager.addView("vwGameOver");
+                SFBattleData.instance.isGameOver = true;
+            }
         }
     }
 

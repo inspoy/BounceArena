@@ -24,8 +24,8 @@ namespace SF
             m_view = view as SFPlayView;
 
             m_view.addEventListener(m_view.btnJoin, SFEvent.EVENT_UI_CLICK, onJoin);
-            SFNetworkManager.instance.dispatcher.addEventListener(this, SFResponseMsgNotifyRemoteUsers.pName, onRemoteUsers);
-            SFNetworkManager.instance.dispatcher.addEventListener(this, SFResponseMsgJoinRoom.pName, onJoinResult);
+            SFNetworkManager.instance.dispatcher.addEventListener(SFResponseMsgNotifyRemoteUsers.pName, onRemoteUsers);
+            SFNetworkManager.instance.dispatcher.addEventListener(SFResponseMsgJoinRoom.pName, onJoinResult);
 
             m_view.setUpdator(update);
             m_willSwitch = false;

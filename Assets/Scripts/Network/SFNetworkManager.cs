@@ -82,11 +82,11 @@ namespace SF
                     }
                     dispatcher.dispatchEvent(SFEvent.EVENT_NETWORK_READY, new SFSimpleEventData(ret));
                 });
-            m_client.dispatcher.addEventListener(this, SFEvent.EVENT_NETWORK_INTERRUPTED, e =>
+            m_client.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_INTERRUPTED, e =>
                 {
                     dispatcher.dispatchEvent(e);
                 });
-            dispatcher.addEventListener(this, SFResponseMsgSocketHeartbeat.pName, onHeartbeat);
+            dispatcher.addEventListener(SFResponseMsgSocketHeartbeat.pName, onHeartbeat);
         }
 
         public void uninit()

@@ -22,9 +22,9 @@ namespace SF
             m_view = view as SFHUDView;
 
             m_view.addEventListener(m_view.btnMenu, SFEvent.EVENT_UI_CLICK, onMenu);
-            SFNetworkManager.instance.dispatcher.addEventListener(this, SFEvent.EVENT_NETWORK_PING, onPing);
-            SFBattleData.instance.dispatcher.addEventListener(this, SFEvent.EVENT_UNIT_LIFE_CHANGE, onLifeChange);
-            SFBattleData.instance.dispatcher.addEventListener(this, SFEvent.EVENT_UNIT_ADD_REMOVE, onUnitAddRemove);
+            SFNetworkManager.instance.dispatcher.addEventListener(SFEvent.EVENT_NETWORK_PING, onPing);
+            SFBattleData.instance.dispatcher.addEventListener(SFEvent.EVENT_UNIT_LIFE_CHANGE, onLifeChange);
+            SFBattleData.instance.dispatcher.addEventListener(SFEvent.EVENT_UNIT_ADD_REMOVE, onUnitAddRemove);
 
             m_view.scrLeftPlayers.SetFillType(1);
             m_view.scrSkills.SetFillType(2);
@@ -41,6 +41,10 @@ namespace SF
 
         void onUpdate(float dt)
         {
+            if (SFBattleData.instance.isGameOver)
+            {
+                return;
+            }
             m_runTime += dt;
             int min = (int)m_runTime / 60;
             int sec = (int)m_runTime % 60;

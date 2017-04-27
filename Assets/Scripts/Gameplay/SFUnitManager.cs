@@ -22,8 +22,8 @@ public class SFUnitManager : MonoBehaviour
         m_controllers = new Dictionary<string, SFUnitController>();
         m_runTime = 0;
 
-        SFNetworkManager.instance.dispatcher.addEventListener(this, SFResponseMsgNotifyUnitStatus.pName, onNotifyUnitStatus);
-        SFNetworkManager.instance.dispatcher.addEventListener(this, SFResponseMsgNotifyNewUserJoin.pName, onNotifyUnitJoin);
+        SFNetworkManager.instance.dispatcher.addEventListener(SFResponseMsgNotifyUnitStatus.pName, onNotifyUnitStatus);
+        SFNetworkManager.instance.dispatcher.addEventListener(SFResponseMsgNotifyNewUserJoin.pName, onNotifyUnitJoin);
     }
 
     // Update is called once per frame
