@@ -235,6 +235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uid: 
+  body: {fileID: 1099139634531592}
   explodeFX: {fileID: 198708391798454656}
 --- !u!136 &136273797720974486
 CapsuleCollider:

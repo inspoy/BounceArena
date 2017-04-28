@@ -75,9 +75,9 @@ const onUpdate = function () {
                 battle.runTime += 40;
                 // 更新坐标
                 utils.traverse(battle.users, function (userItem) {
-                    logInfo("------");
-                    logInfo("speed:" + userItem.speedX.toFixed(3) + "," + userItem.speedY.toFixed(3));
-                    logInfo("  pos:" + userItem.posX.toFixed(3) + "," + userItem.posY.toFixed(3));
+                    // logInfo("------");
+                    // logInfo("speed:" + userItem.speedX.toFixed(3) + "," + userItem.speedY.toFixed(3));
+                    // logInfo("  pos:" + userItem.posX.toFixed(3) + "," + userItem.posY.toFixed(3));
                     // 限制最高速度
                     const k = calcSpeedLimit(userItem.speedX, userItem.speedY, userItem.topSpeed);
                     if (k == 1) {

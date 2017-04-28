@@ -5,10 +5,13 @@
 "use strict";
 
 const net = require("net");
+const redis = require("redis");
 const utils = require("./Conf/SFUtils");
 const commonConf = require("./Conf/SFCommonConf");
 const socketData = require("./Data/SFSocketData");
 const logInfo = utils.logInfo;
+let redisClient = null;
+let redisPublisher = null;
 
 /**
  * 有新连接时调用
@@ -25,8 +28,8 @@ const onSocket = function (socket) {
 
     logInfo(
         "有新的连接:\n" +
-        "- address: " + socket.remoteAddress + "\n" +
-        "-    port: " + socket.remotePort + "\n" +
+        "- address: " + socket["remoteAddress"] + "\n" +
+        "-    port: " + socket["remotePort"] + "\n" +
         "-      id: " + socket.id
     );
 
@@ -136,7 +139,7 @@ const processRequest = function (pid, uid, jsonString) {
     }
 
     if (pid > 0) {
-        process.send({type: "REQ", data: jsonString});
+        redisPublisher["publish"]("BA_REQ", jsonString);
     }
     else {
         // pid <= 0为socket层的协议，无需GameServer处理
@@ -224,9 +227,20 @@ const main = function () {
         process.exit(0);
     });
 
-    process.on("message", function (data) {
-        if (data.type == "RESP") {
-            processResponse(data.data);
+    // 启动redis客户端
+    const onRedisError = function (err) {
+        logInfo("Redis Error:");
+        logInfo(err);
+    };
+    redisClient = redis.createClient();
+    redisClient.on("error", onRedisError);
+    redisPublisher = redis.createClient();
+    redisPublisher.on("error", onRedisError);
+
+    redisClient.subscribe("BA_RESP");
+    redisClient.on("message", function (ch, msg) {
+        if (ch == "BA_RESP") {
+            processResponse(msg);
         }
     });
 

@@ -27,7 +27,7 @@ module.exports = {
     errCode: errCode,
 
     // 游戏相关配置
-    updateDt: 40, // 40ms更新一次游戏逻辑
+    updateDt: 40, // 更新一次游戏逻辑的时间周期
     ballAcc: 30, // 火球发射后的加速度
     ballLife: 5, // 火球寿命
     ballInvincibleTime: 0.5, // 无敌时间

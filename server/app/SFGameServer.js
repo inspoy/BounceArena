@@ -4,12 +4,15 @@
 
 "use strict";
 
+const redis = require("redis");
 const SFUserController = require("./Controller/SFUserController");
 const SFBattleController = require("./Controller/SFBattleController");
 const battleData = require("./Data/SFBattleData");
 const utils = require("./Conf/SFUtils");
 const logInfo = utils.logInfo;
 const controllerMap = {};
+let redisClient = null;
+let redisPublisher = null;
 
 /**
  * 收到客户端请求
@@ -71,7 +74,8 @@ const pushMessage = function (users, data) {
             user_list: users,
             response_data: data
         };
-        process.send({type: "RESP", data: JSON.stringify(obj)});
+
+        redisPublisher["publish"]("BA_RESP", JSON.stringify(obj));
     }
 };
 
@@ -106,9 +110,20 @@ const main = function () {
         process.exit(0);
     });
 
-    process.on("message", function (data) {
-        if (data.type == "REQ") {
-            onRequest(data.data);
+    // 启动redis客户端
+    const onRedisError = function (err) {
+        logInfo("Redis Error:");
+        logInfo(err);
+    };
+    redisClient = redis.createClient();
+    redisClient.on("error", onRedisError);
+    redisPublisher = redis.createClient();
+    redisPublisher.on("error", onRedisError);
+
+    redisClient.subscribe("BA_REQ");
+    redisClient.on("message", function (ch, msg) {
+        if (ch == "BA_REQ") {
+            onRequest(msg);
         }
     });
 

@@ -43,12 +43,6 @@ const main = function () {
             if (msg.type == "LOG") {
                 log(logType_SocketHandler, msg.data, msg.level);
             }
-            else if (msg.type == "REQ") {
-                // 转发消息
-                if (gameServer != null) {
-                    gameServer.send(msg);
-                }
-            }
         });
         socketHandler.on('error', function (err) {
             log(logType_SocketHandler, "Process Error:\n".red + err, -2);
@@ -69,12 +63,6 @@ const main = function () {
         gameServer.on('message', function (msg) {
             if (msg.type == "LOG") {
                 log(logType_GameServer, msg.data, msg.level);
-            }
-            else if (msg.type == "RESP") {
-                // 转发消息
-                if (socketHandler != null) {
-                    socketHandler.send(msg);
-                }
             }
         });
         gameServer.on('error', function (err) {
