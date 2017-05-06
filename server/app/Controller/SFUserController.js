@@ -69,7 +69,7 @@ const onJoinRoom = function (req) {
     let found = false;
     let battleId = "";
     utils.traverse(battleData.battleList, function (battleItem) {
-        if (battleItem.users.length < commonConf.roomUserLimit) {
+        if (Object.keys(battleItem.users).length == 0 < commonConf.roomUserLimit) {
             found = true;
             battleId = battleItem.battleId;
         }
