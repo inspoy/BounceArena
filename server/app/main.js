@@ -17,6 +17,12 @@ const logType_GameServer = 2;
 let isSocketHandlerRunning = false;
 let isGameServerRunning = false;
 
+/**
+ * 格式化输出日志
+ * @param {number}type 日志类型
+ * @param {string}str 日志内容
+ * @param {number}level 日志等级，等级越低优先度越高
+ */
 const log = function (type, str, level) {
     if (level <= commonConfig.logLevel) {
         const timeNow = new Date();
