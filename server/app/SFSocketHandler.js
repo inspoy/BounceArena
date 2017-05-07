@@ -34,12 +34,15 @@ const onSocket = function (socket) {
     );
 
     socket.on("data", function (data) {
+        // 把接收到的数据先全部放在dataBuffer里，这可以理解为一个队列
         socket.dataBuffer += data;
         while (true) {
             const idx = socket.dataBuffer.indexOf("\r\n\r\n");
             if (idx == -1) {
+                // 寻找当前buffer里还有没有分隔符，如果没有的话说明已经处理完了，跳出循环
                 break;
             }
+            // 根据找到的分隔符的位置来截取单个JSON字符串
             const req = socket.dataBuffer.substr(0, idx);
             socket.dataBuffer = socket.dataBuffer.substr(idx + 4);
             try {
@@ -179,7 +182,7 @@ const processResponse = function (jsonString) {
         }
     }
     catch (e) {
-        logInfo("处理请求信息出错: " + jsonString + "\n错误信息：\n" + e);
+        logInfo("处理响应信息出错: " + jsonString + "\n错误信息：\n" + e);
     }
 };
 
