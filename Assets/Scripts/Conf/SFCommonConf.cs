@@ -41,7 +41,6 @@ namespace SF
         /// <summary>
         /// 服务器IP地址
         /// </summary>
-//        public string serverIp = "120.25.198.51";
         public string serverIp = "127.0.0.1";
 
         /// <summary>
